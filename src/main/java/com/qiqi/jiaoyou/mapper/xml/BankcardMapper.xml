@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqi.jiaoyou.mapper.BankcardMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.qiqi.jiaoyou.pojo.Bankcard">
+                    <id column="id" property="id"/>
+                    <result column="memberId" property="memberId"/>
+                    <result column="openingBank" property="openingBank"/>
+                    <result column="bankMemberName" property="bankMemberName"/>
+                    <result column="bankNumber" property="bankNumber"/>
+                    <result column="addTime" property="addTime"/>
+                    <result column="editTime" property="editTime"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+            id, memberId, openingBank, bankMemberName, bankNumber, addTime, editTime
+        </sql>
+
+</mapper>

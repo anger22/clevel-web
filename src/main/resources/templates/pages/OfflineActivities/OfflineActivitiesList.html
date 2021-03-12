@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>App轮播图数据表格</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+
+</head>
+<body>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="">主页</a>
+        <a><cite>组件</cite></a>
+        <a><cite>数据表格</cite></a>
+        <a><cite>开启头部工具栏</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <form id="form">
+                        <div class="demoTable" style="margin-bottom: 10px">
+                            发起人昵称：
+                            <div class="layui-inline">
+                                <input class="layui-input" name="sendMemberNickName" id="sendMemberNickName" autocomplete="off">
+                            </div>
+                            状态：
+                            <div class="layui-inline">
+                                <select name="state" autocomplete="off" placeholder="请选择分类" class="layui-input" style="width: 182px;" >
+                                    <option value="">请选择状态</option>
+                                    <option value="1">待报名</option>
+                                    <option value="2">待对方确认</option>
+                                    <option value="3">待自己确认</option>
+                                    <option value="4">审核中</option>
+                                    <option value="5">审核通过</option>
+                                    <option value="6">审核未通过</option>
+                                    <option value="7">已取消</option>
+                                </select>
+                            </div>
+                            <button class="layui-btn" data-type="reload" id="do_search">搜索</button>
+                        </div>
+                    </form>
+                    <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
+                    <!--<script type="text/html" id="toolbarDemo">-->
+                    <!--</script>-->
+                    <script type="text/html" id="test-table-toolbar-barDemo">
+                        <a class="layui-btn layui-btn-xs" lay-event="read">活动详情</a>
+                        {{# if(d.state != 5){ }}
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="edit">审核</a>
+                        {{# } }}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="checkboxTpl1">
+    <input type="checkbox" id="enableState" name="enableState" data-id="{{d.id}}"
+           value="{{d.enableState}}"
+           lay-skin="switch" lay-text="启用|禁用" lay-filter="enableState" {{
+           d.enableState== '1' ? 'checked' : '' }}>
+</script>
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script src="../../../layuiadmin/layui/lay/modules/jquery-3.4.0.js"></script>
+<script>
+    var json = $('#form').serialize();
+    json = decodeURIComponent(json, true);
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'form', 'laydate'], function () {
+        var admin = layui.admin
+            , table = layui.table
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , form = layui.form;
+        table.render({
+            skin: 'line', //行边框风格
+            elem: '#test-table-toolbar'
+            , id: 'OfflineActivities'
+            , url: '/sendOfflineActivities/findListByPage'
+            , where: {json: json}
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , title: '线下活动列表'
+            , cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'},
+                    {align: 'center', field: 'id', title: 'id', fixed: 'left', unresize: true, sort: true},
+                    {align: 'center', field: 'sendMemberId', title: '发起人id', unresize: true, sort: true},
+                    {
+                        field: 'sendMemberHead', title: '发起人用户头像', templet: function (d) {
+                            return '<div class="imgview" ><img src="' + d.sendMemberHead + '" alt="" width="50px" height="50px"></a></div>';
+                        }
+                    },
+                    {align: 'center', field: 'sendMemberNickName', title: '发起人昵称', unresize: true, sort: true},
+                    {
+                        field: 'sendMemberSex', title: '发起人性别', templet: function (d) {
+                            if (d.sendMemberSex == 1) {
+                                return "男";
+                            } else if (d.sendMemberSex == 2) {
+                                return "女";
+                            }
+                        }
+                    },
+                    {align: 'center', field: 'sendMemberAge', title: '发起人年龄', unresize: true, sort: true},
+                    {align: 'center', field: 'activityTheme', title: '活动主题', unresize: true, sort: true},
+                    {align: 'center', field: 'address', title: '活动地址', unresize: true, sort: true},
+                    {align: 'center', field: 'averageDiamondsSize', title: '平均钻石数量', unresize: true, sort: true},
+                    {align: 'center', field: 'perSize', title: '活动人数', unresize: true, sort: true},
+                    {align: 'center', field: 'addTime', title: '发起时间', unresize: true, sort: true},
+                    {align: 'center', field: 'startTime', title: '开始时间', unresize: true, sort: true},
+                    {align: 'center', field: 'lable', title: '活动标签', unresize: true, sort: true},
+                    {
+                        field: 'state', title: '状态', templet: function (d) {
+                            if (d.state == 1) {
+                                return "待报名"
+                            } else if (d.state == 2) {
+                                return "待对方确认"
+                            } else if (d.state ==3) {
+                                return "待自己确认"
+                            } else if (d.state ==4) {
+                                return "审核中"
+                            } else if (d.state ==5) {
+                                return "审核通过"
+                            } else if (d.state ==6) {
+                                return "审核未通过"
+                            } else if (d.state ==7) {
+                                return "已取消"
+                            }
+                        }
+                    },
+                    {align: 'center', field: 'reason', title: '原因', unresize: true, sort: true},
+                    {fixed: 'right', title: '操作', toolbar: '#test-table-toolbar-barDemo', width: 150}
+                ]
+            ]
+            ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+      layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+      //,curr: 1 //设定初始在第 1 页
+      ,groups: 6 //只显示 6 个连续页码
+      ,first: true //显示首页
+      ,last: true //显示尾页
+
+    }
+        });
+        var $ = layui.$, active = {
+            reload: function () {
+                var json = $('#form').serialize();
+                json = decodeURIComponent(json, true);
+                //执行重载
+                table.reload('OfflineActivities', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , where: {json: json}
+                }, 'data');
+                return false;
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+            return false;
+        });
+        //监听行工具事件
+        table.on('tool(test-table-toolbar)', function (obj) {
+            var data = obj.data;
+            var id = obj.data.id;
+            if (obj.event === 'read') {
+                layer.open({
+                    type: 2,
+                    skin: 'layui-layer-rim',
+                    area: ['86%', '95%'],
+                    content: '/sendOfflineActivities/pages/OfflineActivitiesRead?id=' + id
+                });
+            } else if (obj.event === 'edit') {
+                layer.open({
+                    type: 2,
+                    skin: 'layui-layer-rim',
+                    area: ['86%', '95%'],
+                    content: '/sendOfflineActivities/pages/OfflineActivitiesUpdate?id=' + id
+                });
+            }
+        });
+
+        /* 监听指定开关 */
+        form.on('switch(dynamicReleaseState)', function (data) {
+            //得到的是显示后的值
+            var x = data.elem.checked;
+            layer.open({
+                content: '确定更改发布状态为：' + (this.checked ? '已发布' : '未发布')
+                , btn: ['确定', '取消']
+                , yes: function (index, layero) {
+                    data.elem.checked = x;
+                    form.render();
+                    layer.close(index);
+                    //按钮【按钮一】的回调
+                }
+                , btn2: function (index, layero) {
+                    //按钮【按钮二】的回调
+                    data.elem.checked = !x;
+                    form.render();
+                    layer.close(index);
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+                , cancel: function () {
+                    //右上角关闭回调
+                    data.elem.checked = !x;
+                    form.render();
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+            return false;
+
+        });
+
+    });
+
+    $("body").on("click", ".imgview", function (e) {
+        layer.photos({photos: {"data": [{"src": e.target.src}]}});
+    });
+</script>
+</body>
+</html>

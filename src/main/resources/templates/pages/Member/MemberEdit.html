@@ -1,0 +1,120 @@
+<!--用来修改钻石和会员信息-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>表单组合</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">更新</div>
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" lay-filter="component-form-group" id="form">
+                <input type="hidden" name="id" th:value="${member.id}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>金钻</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="GoldNumber" id="GoldNumber" autocomplete="off"
+                               onkeypress="return(/[\d]/.test(String.fromCharCode(event.keyCode)))"
+                               placeholder="请输入金钻数"  th:value="${member.GoldNumber}" min="0" max="900000000"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>银钻</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="silverNumber" id="silverNumber" autocomplete="off"
+                               placeholder="请输入银钻数" min="0" max="900000000"
+                               onkeypress="return(/[\d]/.test(String.fromCharCode(event.keyCode)))"
+                               th:value="${member.silverNumber}"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>会员到期时间</label>
+                    <div class="layui-input-block">
+                         <input type="text" class="layui-input" th:value="${#dates.format(member.vipEndTime, 'yyyy-MM-dd HH:mm:ss')}" name="vipEndTime" id="vipEndTime" placeholder="请选择时间">
+
+                        <!--<input type="text" name="vipEndTime" id="vipEndTime" autocomplete="off"-->
+                               <!--placeholder="请选择时间"  th:value="${#dates.format(member.vipEndTime, 'yyyy-MM-dd HH:mm:ss')}"-->
+                               <!--class="layui-input" required="required">-->
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'upload', 'laydate', 'layedit'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , layedit = layui.layedit
+            , upload = layui.upload
+            , form = layui.form;
+
+  var laydate = layui.laydate;
+        //常规用法
+        laydate.render({
+            elem: '#vipEndTime'
+            ,type: 'datetime'
+        })
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            // var content = tt.get('#edit').getContent()
+            // $("#memberIntroduce").val(encodeURIComponent(content))
+            //因为是拼接的路径，所有上传到数据库之后，不能有前部分的凭借路径，在这里需要去掉
+            // if($('#demo1')[0].src.length < 100){
+            //     $('#memberImg').val($('#demo1')[0].src.substr($('#demo1')[0].src.indexOf("/u")))
+            // }
+
+            var json = $('#form').serialize();
+            json = decodeURIComponent(json, true);
+            $.ajaxSettings.headers = {"token": layui.data(layui.setter.tableName)['token']};
+            $.ajax({
+                url: '/member/updateGlod',
+                type: "post",
+                data: json,
+                async: false,
+                success: function (result) {
+                    window.parent.location.reload();
+                },
+                error: function (result) {
+                    window.parent.location.reload();
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

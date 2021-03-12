@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <title>表单组合</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+
+<div class="layui-fluid">
+  <div class="layui-card">
+    <div class="layui-card-header">编辑</div>
+    <div class="layui-card-body" style="padding: 15px;">
+      <form class="layui-form" action="" lay-filter="component-form-group" id="form">
+              <input type="hidden" name="revision" th:value="${giftconsumption.revision}">
+              <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color: red">*</span>请输入接收方ID</label>
+                <div class="layui-input-block">
+                  <input type="text" name="memberId" id="memberId" lay-verify="required|memberId" autocomplete="off"
+                         placeholder="请输入接收方ID"
+                         class="layui-input" required="required" th:value="${giftconsumption.memberId}">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color: red">*</span>请输入发送方id</label>
+                <div class="layui-input-block">
+                  <input type="text" name="sendMemberId" id="sendMemberId" lay-verify="required|sendMemberId" autocomplete="off"
+                         placeholder="请输入发送方id"
+                         class="layui-input" required="required" th:value="${giftconsumption.sendMemberId}">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color: red">*</span>请输入发送方头像</label>
+                <div class="layui-input-block">
+                  <input type="text" name="sendMemberHead" id="sendMemberHead" lay-verify="required|sendMemberHead" autocomplete="off"
+                         placeholder="请输入发送方头像"
+                         class="layui-input" required="required" th:value="${giftconsumption.sendMemberHead}">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color: red">*</span>请输入发送方昵称</label>
+                <div class="layui-input-block">
+                  <input type="text" name="sendMemberNickName" id="sendMemberNickName" lay-verify="required|sendMemberNickName" autocomplete="off"
+                         placeholder="请输入发送方昵称"
+                         class="layui-input" required="required" th:value="${giftconsumption.sendMemberNickName}">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color: red">*</span>请输入礼物ID</label>
+                <div class="layui-input-block">
+                  <input type="text" name="giftId" id="giftId" lay-verify="required|giftId" autocomplete="off"
+                         placeholder="请输入礼物ID"
+                         class="layui-input" required="required" th:value="${giftconsumption.giftId}">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color: red">*</span>请输入礼物图片</label>
+                <div class="layui-input-block">
+                  <input type="text" name="giftImages" id="giftImages" lay-verify="required|giftImages" autocomplete="off"
+                         placeholder="请输入礼物图片"
+                         class="layui-input" required="required" th:value="${giftconsumption.giftImages}">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color: red">*</span>请输入礼物名称</label>
+                <div class="layui-input-block">
+                  <input type="text" name="giftName" id="giftName" lay-verify="required|giftName" autocomplete="off"
+                         placeholder="请输入礼物名称"
+                         class="layui-input" required="required" th:value="${giftconsumption.giftName}">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color: red">*</span>请输入礼物数量</label>
+                <div class="layui-input-block">
+                  <input type="text" name="giftSzie" id="giftSzie" lay-verify="required|giftSzie" autocomplete="off"
+                         placeholder="请输入礼物数量"
+                         class="layui-input" required="required" th:value="${giftconsumption.giftSzie}">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color: red">*</span>请输入发送时间</label>
+                <div class="layui-input-block">
+                  <input type="text" name="addTime" id="addTime" lay-verify="required|addTime" autocomplete="off"
+                         placeholder="请输入发送时间"
+                         class="layui-input" required="required" th:value="${giftconsumption.addTime}">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color: red">*</span>请输入该礼物是否被接收方提现</label>
+                <div class="layui-input-block">
+                  <input type="text" name="withdrawOrNot" id="withdrawOrNot" lay-verify="required|withdrawOrNot" autocomplete="off"
+                         placeholder="请输入该礼物是否被接收方提现"
+                         class="layui-input" required="required" th:value="${giftconsumption.withdrawOrNot}">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color: red">*</span>请输入申请提现时间</label>
+                <div class="layui-input-block">
+                  <input type="text" name="withdrawTime" id="withdrawTime" lay-verify="required|withdrawTime" autocomplete="off"
+                         placeholder="请输入申请提现时间"
+                         class="layui-input" required="required" th:value="${giftconsumption.withdrawTime}">
+                </div>
+              </div>
+        <div class="layui-form-item layui-layout-admin">
+          <div class="layui-input-block">
+            <div class="layui-footer" style="left: 0;">
+              <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script>
+  layui.config({
+    base: '../../../layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'form', 'laydate', 'layedit'], function () {
+    var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , layedit = layui.layedit
+            , form = layui.form;
+
+
+    /* 监听提交 */
+    form.on('submit(component-form-demo1)', function (data) {
+      var json = $('#form').serialize();
+      json = decodeURIComponent(json, true);
+      $.ajaxSettings.headers = {"token":layui.data(layui.setter.tableName)['token']};
+            $.ajax({
+        url: '/giftconsumption/update',
+        type: "post",
+        data: json,
+        async: false,
+        success: function (result) {
+                    if (result.status == 200) {
+                        window.parent.location.reload();
+                    } else {
+                        layer.msg(result.message, {
+                            offset: '15px'
+                            , icon: 2
+                            , time: 1000
+                        }, function () {
+                            window.parent.location.reload();
+                        });
+                    }
+                },
+        error: function (result) {
+          window.parent.location.reload();
+        }
+      });
+    });
+
+  });
+</script>
+</body>
+</html>
+

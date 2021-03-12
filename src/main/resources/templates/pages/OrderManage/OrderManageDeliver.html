@@ -1,0 +1,385 @@
+<!--商品订单发货部分-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>layarea</title>
+ <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">发货信息填写</div>
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" lay-filter="component-form-group" id="form">
+                    <input type="hidden" name="orderId" th:value="${orderManage.id}">
+                    <input type="hidden" name="sendUserId" th:value="${orderManage.userId}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>收件人姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="receiveUserName" id="receiveUserName" autocomplete="off"
+                               placeholder="请输入收件人姓名"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>收件人手机号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="receiveUserPhone" id="receiveUserPhone" autocomplete="off"
+                               placeholder="请输入收件人手机号"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>收件人地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="receiveUserLocation" id="receiveUserLocation" autocomplete="off"
+                               placeholder="请输入收件人地址------例如：广东省广州市番禺区上城街道繁花小区5单元六楼601"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>寄件人姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="sendUserName" id="sendUserName" autocomplete="off"
+                               placeholder="请输入寄件人姓名"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>寄件人手机号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="sendUserPhone" id="sendUserPhone" autocomplete="off"
+                               placeholder="请输入寄件人手机号"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+
+                <!--省市区选择寄件人地址-->
+                        <div class="layui-form-item" id="addressDiv1">
+                            <label class="layui-form-label"><span style="color: red">*</span>寄件人地址</label>
+                    <div class="layui-input-block">
+                            <div class="layui-input-inline">
+                                <select name="P1" lay-filter="province" id="province" lay-verify="required">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select name="C1" lay-filter="city" id="city" lay-verify="required">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select name="A1" lay-filter="area" id="area" lay-verify="required">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" id="addressDetail">
+                                <input id="address" type="text" name="address" lay-verify="title" autocomplete="off"
+                                       placeholder="请输入具体地址" required="required" class="layui-input" style="width: 120%;">
+                                <dl id="addressTip" class="addressDl">
+                                </dl>
+                            </div>
+
+                        </div>
+                        </div>
+                <!--省市区选择-->
+                            <div class="layui-form-item" style="margin-top: 10px;">
+                                <label class="layui-form-label"><span style="color: red">*</span>快递类型</label>
+                                <div class="layui-input-block">
+                                    <select name="expressType" lay-filter="expressType" id="expressType" lay-verify="required">
+                                        <option value="">选择快递类型(例如：顺丰)</option>
+                                        <!--不要问为何写这么多预设选项不用，因为狗屎的快递一百把接口更细化了-->
+                                        <!--<option value="debangkuaidi">德邦快递</option>-->
+                                        <!--<option value="jd">京东物流</option>-->
+                                        <!--<option value="shunfeng">顺丰速运</option>-->
+                                        <!--<option value="huitongkuaidi">百世汇通</option>-->
+                                        <!--<option value="tiantian">天天快递</option>-->
+                                        <!--<option value="zhongtong">中通快递</option>-->
+                                        <!--<option value="yuantong">圆通快递</option>-->
+                                        <!--<option value="yunda">韵达快递</option>-->
+                                        <!--<option value="huitongkuaidi">百世（汇通）</option>-->
+                                        <!--<option value="shentong">申通快递</option>-->
+                                        <!--<option value="zhaijisong">宅急送</option>-->
+                                        <!--<option value="youshuwuliu">优速快递</option>-->
+                                    </select>
+                                    <button style="margin-top: 10px;" id="checkExpress" type="button" class="layui-btn layui-btn-normal">检测支持快递类型</button>
+                                </div>
+                            </div>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label"><span style="color: red">*</span>物品名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="goodsName" id="goodsName" autocomplete="off"
+                               placeholder="请输入物品名称------例：文件"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">重量（选填）</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="expressWeight" id="expressWeight" autocomplete="off"
+                               placeholder="请输入重量 /KG"
+                               class="layui-input" >
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">支付类型</label>
+                    <div class="layui-input-block">
+                        <select name="payType" lay-filter="payType" id="payType" lay-verify="required">
+                            <option value="寄付">寄付</option>
+                            <option value="到付">到付</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注（选填）</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="remark" id="remark" autocomplete="off"
+                               placeholder="请输入备注（例如：易碎品-请轻拿轻放）"
+                               class="layui-input" >
+                    </div>
+                </div>
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <input type="hidden" id="sendUserLocation" name="sendUserLocation"  />
+                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="../../../layuiadmin/layui/lay/modules/jquery-3.4.0.js"></script>
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script src="../../../layuiadmin/js/select.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+
+  layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form','layer'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , layedit = layui.layedit
+            , upload = layui.upload
+            , form = layui.form;
+
+
+      form.on('select(expressType)', function(data){
+          // console.log("asdasd",data)
+          // layer.msg("我点了快递类型，数据呢，快死出来")
+          // $("#cate_goods").nextAll().remove();
+          // $.ajax({
+          //     url: "",
+          //     type: 'post',
+          //     data: {cid:data.value},
+          //     dataType:'json',
+          //     success: function (info) {
+          //         $('#cate_goods').after(info.ht);
+          //         $('#agent_id').val(info.gids);
+          //     }
+          // });
+      });
+
+      /*用户点击检测按钮的时候，开始检测支持哪些快递*/
+      $(document).on('click',"#checkExpress",function(){
+        /*首先获取选择的区域信息*/
+        var str =   $('#province').val()+"-"+$('#city').val() +"-"+ $('#area').val();
+          /*获取到区域信息之后，开始请求接口进行匹配，若是没有选择区域，则提示进行选择*/
+          if(str == "全部-全部-全部"){
+              layer.msg("请选择省市区的信息");
+              return false;
+          }
+          if($('#receiveUserLocation').val() == ""){
+              layer.msg("请输入收件人地址");
+              return null;
+          }
+          /*发起请求，请求数据接口数据*/
+          var date = new Date().getTime();
+          var code = "";
+          for(var i = 1;i <= 10;i++){
+              const num = Math.floor(Math.random()*10);
+              code += num;
+          }
+          var strCode = code +date;
+           $.ajax({
+               url: 'http://cloud.kuaidi100.com/api',
+               type: "post",
+               // contentType:"application/x-www-form-urlencoded",
+               //  data:{ "secret_key":"9pz53gtiVBTcmgzyUZ",
+               //      "secret_code":  "d9dc91cb9d124dc897a0674528b59dab" ,
+               //      "secret_sign": "579DE8CDE78C7B64A55650C06E468C9D",
+               //      "method": "searchnetwork",
+               //      "param":'{"area":"'+ str +'","keyword":"","company":"",”offset“:”0“}'
+               //   },
+               //下面是运力查询，上面是网点查询，区别是，哥哥懒得说，自己官方看文档，顺便说一句，客服很不错
+               data:{
+                   "secret_key":"9pz53gtiVBTcmgzyUZ",
+                   "secret_code":"7c5c49c5e51a4b75bd960f4997d2846a",
+                   "secret_sign":"579DE8CDE78C7B64A55650C06E468C9D",
+                   "sendManPrintAddr":""+str+"",
+                   "recManPrintAddr":""+$('#receiveUserLocation').val()+""
+               },
+               // dataType:"json",
+               // contentType:"json/application",
+                success: function (result) {
+                    // result = {"status":200,"message":"成功","netList":[{"id":7950942129605506,"sId":"7950942129605506","md5Code":"C1E787E5F10618C02DB71FB4C4D1131B","companyId":17,"companyNumber":"youshuwuliu","companyName":"优速快递","number":"KDNET_733569","name":"<font color=\"red\">长安</font>二部","linkman":"常伟","address":"中山东路600号","workArea":" <font color=\"red\">长安</font>区除古城东路以北外，全境  <font color=\"red\">长安</font>区全境  <font color=\"red\">长安</font>区全境  <font color=\"red\">长安</font>区全境  <font color=\"red\">长安</font>区全境  <font color=\"red\">长安</font>区全境  <font color=\"red\">长安</font>区全境 ...","refuseArea":"-","xzqNumber":"130102000000","xzqFullName":"河北,石家庄市,长安区","longitude":0.0,"latitude":0.0,"tel":"15383237616  ","mobile":"15383237616","fax":null,"qq":"282520741","remark":"-","snatch":true,"audit":false,"visible":true,"score":8.0,"index":100,"lock":0,"type":"SNATCH","got":true,"detailText":"联系人:常伟。电话:15383237616  。名称:<font color=\"red\">长安</font>二部。收派范围: <font color=\"red\">长安</font>区除古城东路以北外，全境  <font color=\"red\">长安</font>区全境  <font color=\"red\">长安</font>区全境  <font color=\"red\">长安</font>区全境  <font color=\"red\">长安</font>区全境  <font color=\"red\">长安</font>区全境  <font color=\"red\">长安</font>区全境 。备注:-。QQ:282520741。地址:中山...","lastModify":"2020-12-08","source":"JOIN","url":"http://www.kuaidi100.com/network/netTel733569.htm","telOne":"15383237616","subTel":{"KDNET_733569":"2217","queryTel":"15383237616  ","remainSMS":"0","serviceTel":"15383237616  ","complainTel":"15383237616"},"netUsers":[]},{"id":79819891180259,"sId":"79819891180259","md5Code":"BA421B6798FE4452DE7EBAB4FE44322B","companyId":6,"companyNumber":"huitongkuaidi","companyName":"汇通快递","number":"KDNET_1202195","name":"石家庄<font color=\"red\">长安</font>区分部","linkman":"段坤","address":"谈固新村","workArea":"<font color=\"red\">长安</font>区银龙小区十里铺水木青城南石家庄河北地质勘察院银白佛钢材市场玛钢工业区华署药厂司法警官职业学院五十三中白佛宠趣休闲广场白佛花鸟鱼虫市场白佛口村锦城白佛小区<font color=\"red\">长安</font>区法院安联青年广场秋景怡园东区观天下小区馨悦小镇博雅盛世天洲视界城十三中北高...","refuseArea":"-","xzqNumber":"130102000000","xzqFullName":"河北,石家庄市,长安区","longitude":0.0,"latitude":0.0,"tel":"0311-68020808","mobile":null,"fax":null,"qq":"76297081","remark":"-","snatch":true,"audit":false,"visible":true,"score":9.0,"index":100,"lock":0,"type":"SNATCH","got":true,"detailText":"联系人:段坤。电话:0311-68020808。名称:石家庄<font color=\"red\">长安</font>区分部。收派范围:<font color=\"red\">长安</font>区银龙小区十里铺水木青城南石家庄河北地质勘察院银白佛钢材市场玛钢工业区华署药厂司法警官职业学院五十三中白佛宠趣休闲广场白佛花鸟鱼虫市场白佛口村锦城白佛小...","lastModify":"2020-12-08","source":"JOIN","url":"http://www.kuaidi100.com/network/netTel1202195.htm","telOne":"0311-68020808","subTel":{"queryTel":"0311-68020808","KDNET_1202195":"1771","remainSMS":"0","serviceTel":"17050221414 13014342813","complainTel":null},"netUsers":[]},{"id":795091035924454,"sId":"795091035924454","md5Code":"62F864DE28F020684A54B61FF96868B0","companyId":7,"companyNumber":"tiantian","companyName":"天天快递","number":"KDNET_128207","name":"石家庄<font color=\"red\">长安</font>一部","linkman":"齐怡超","address":"育才街北口路北（力达士振华汽车养护中心院内）","workArea":" <font color=\"red\">长安</font>区中山路以北，北二环以南，体育大街以西，建设大街以东，棉三小区，棉三生活区，棉二小区，棉二生活区，棉四小区，棉四生活区，谈阁街，谈中街，汇景国际，汇景家园，青园街，钓鱼台名邸，健康路33号，新万宝商城，图书大厦，富邦大厦，广安街，...","refuseArea":"北二环以外均超区，中山路以南超区。","xzqNumber":"130102000000","xzqFullName":"河北,石家庄市,长安区","longitude":0.0,"latitude":0.0,"tel":"18031159975,18031159737","mobile":"18031159975,18031159737","fax":null,"qq":"407146053","remark":"-","snatch":true,"audit":false,"visible":true,"score":9.0,"index":100,"lock":0,"type":"SNATCH","got":true,"detailText":"联系人:齐怡超。电话:18031159975,18031159737。名称:石家庄<font color=\"red\">长安</font>一部。收派范围: <font color=\"red\">长安</font>区中山路以北，北二环以南，体育大街以西，建设大街以东，棉三小区，棉三生活区，棉二小区，棉二生活区，棉四小区，棉四生活区，谈阁街，谈...","lastModify":"2020-12-08","source":"JOIN","url":"http://www.kuaidi100.com/network/netTel128207.htm","telOne":"18031159975","subTel":{"KDNET_128207":"16956","queryTel":"18031159975,18031159737","remainSMS":"0","serviceTel":"18031159975,18031159737","complainTel":null},"netUsers":[]},{"id":79819895049478,"sId":"79819895049478","md5Code":"A2F3543E2B7356C5613D2CC6ADA83817","companyId":4,"companyNumber":"yuantong","companyName":"圆通快递","number":"KDNET_1215086","name":"133","linkman":"李明","address":"深圳市南山区金蝶软件园","workArea":"<font color=\"red\">长安</font>区书香华苑,冀兴尊园,乐城苑,乐城半岛,北宋新苑,北宋,水泵厂宿舍,煤机街单位宿舍,信息工程院宿舍,煤机二区,一印宿舍,市税务局宿舍,水文家园,东方名邸,河纺南院,河纺小区,建华百货大楼,紫光都,新世纪钻石广场,省水利工程局宿舍,东明...","refuseArea":"无盲区。","xzqNumber":"440305000000","xzqFullName":"广东,深圳市,南山区","longitude":0.0,"latitude":0.0,"tel":"95554","mobile":null,"fax":null,"qq":"76297081","remark":"-","snatch":true,"audit":false,"visible":true,"score":9.0,"index":100,"lock":0,"type":"SNATCH","got":true,"detailText":"联系人:李明。电话:95554。名称:133。收派范围:<font color=\"red\">长安</font>区书香华苑,冀兴尊园,乐城苑,乐城半岛,北宋新苑,北宋,水泵厂宿舍,煤机街单位宿舍,信息工程院宿舍,煤机二区,一印宿舍,市税务局宿舍,水文家园,东方名邸,河纺南院,河纺小区,建华...","lastModify":"2020-12-08","source":"JOIN","url":"http://www.kuaidi100.com/network/netTel1215086.htm","telOne":null,"subTel":{"KDNET_1215086":"1807","queryTel":"95554","remainSMS":"0","serviceTel":"95554","complainTel":"95554"},"netUsers":[]},{"id":79819794759767,"sId":"79819794759767","md5Code":"256ABEE85401010A71306942CACE6F57","companyId":20,"companyNumber":"guotongkuaidi","companyName":"国通快递","number":"KDNET_1169653","name":"石家庄谈固国通","linkman":"时会峰","address":"中山东路666号","workArea":" <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区...","refuseArea":"-","xzqNumber":"130102000000","xzqFullName":"河北,石家庄市,长安区","longitude":0.0,"latitude":0.0,"tel":"13333112125  ","mobile":"13333112125","fax":null,"qq":"641141117","remark":"-","snatch":true,"audit":false,"visible":true,"score":9.0,"index":100,"lock":0,"type":"SNATCH","got":true,"detailText":"联系人:时会峰。电话:13333112125  。名称:石家庄谈固国通。收派范围: <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>区  <font color=\"red\">长安</font>区整个<font color=\"red\">长安</font>...","lastModify":"2020-12-08","source":"JOIN","url":"http://www.kuaidi100.com/network/netTel1169653.htm","telOne":"13333112125","subTel":{"queryTel":"13333112125  ","remainSMS":"0","KDNET_1169653":"375","serviceTel":"13333112125  ","complainTel":null},"netUsers":[]},{"id":795091202934485,"sId":"795091202934485","md5Code":"3DB25B32EF3BE37AC9BD9C19F5154090","companyId":30,"companyNumber":"quanyikuaidi","companyName":"全一","number":"KDNET_100878","name":"全一快递石家庄分公司","linkman":"张小力","address":"dghjk","workArea":" <font color=\"red\">长安</font>区空间和规范的 ","refuseArea":"石家庄市二环外","xzqNumber":"130102000000","xzqFullName":"河北,石家庄市,长安区","longitude":0.0,"latitude":0.0,"tel":"4006631111  ","mobile":null,"fax":null,"qq":"1234567","remark":"-","snatch":true,"audit":false,"visible":true,"score":9.0,"index":100,"lock":0,"type":"SNATCH","got":true,"detailText":"联系人:张小力。电话:4006631111  。名称:全一快递石家庄分公司。收派范围: <font color=\"red\">长安</font>区空间和规范的 。备注:-。QQ:1234567。地址:dghjk。","lastModify":"2020-12-08","source":"JOIN","url":"http://www.kuaidi100.com/network/netTel100878.htm","telOne":"4006631111","subTel":{"queryTel":"4006631111  ","remainSMS":"0","serviceTel":"4006631111  ","complainTel":"4006631111","KDNET_100878":"5751"},"netUsers":[]}],"companyTotal":[{"companyName":"圆通","companyNumber":"yuantong","companyId":4,"count":2},{"companyName":"百世快递","companyNumber":"huitongkuaidi","companyId":6,"count":2},{"companyName":"国通","companyNumber":"guotongkuaidi","companyId":20,"count":2},{"companyName":"全一","companyNumber":"quanyikuaidi","companyId":30,"count":1},{"companyName":"天天","companyNumber":"tiantian","companyId":7,"count":1},{"companyName":"优速","companyNumber":"youshuwuliu","companyId":17,"count":3}],"total":6}
+                    result = JSON.parse(result)
+                    // console.log("消息获取成功",result)
+                  /*这里取到回传的数据*/
+                      var $html = "";
+                       $.each(result.data, function (index, item) {
+                       // $.each(result.companyTotal, function (index, item) {
+                           /*狗屎的快递100，只好在这里筛选发货地址符合的数据类型了*/
+                           if(item.com == "debangkuaidi" ||
+                               item.com == "jd" ||
+                               item.com == "shunfeng" ||
+                               item.com == "huitongkuaidi" ||
+                               item.com == "tiantian" ||
+                               item.com == "zhongtong" ||
+                               item.com == "yuantong" ||
+                               item.com == "yunda" ||
+                               item.com == "huitongkuaidi" ||
+                               item.com == "shentong" ||
+                               item.com == "zhaijisong" ||
+                               item.com == "youshuwuliu"
+                           ){
+                               if(item.com == "debangkuaidi"){
+                                   $html += "<option value='" + item.com + "'>" +"德邦快递" + "</option>";
+                               }
+                               if(item.com == "jd"){
+                                   $html += "<option value='" + item.com + "'>" + "京东物流"+ "</option>";
+                               }
+                               if(item.com == "shunfeng"){
+                                   $html += "<option value='" + item.com + "'>" + "顺丰速运"+ "</option>";
+                               }
+                               if(item.com == "huitongkuaidi"){
+                                   $html += "<option value='" + item.com + "'>" +"百世汇通" + "</option>";
+                               }
+                               if(item.com == "tiantian"){
+                                   $html += "<option value='" + item.com + "'>" + "天天快递"+ "</option>";
+                               }
+                               if(item.com == "zhongtong"){
+                                   $html += "<option value='" + item.com + "'>" + "中通快递"+ "</option>";
+                               }
+                               if(item.com == "yuantong"){
+                                   $html += "<option value='" + item.com + "'>" +"圆通快递" + "</option>";
+                               }
+                               if(item.com == "yunda"){
+                                   $html += "<option value='" + item.com + "'>" +"韵达快递" + "</option>";
+                               }
+                               if(item.com == "huitongkuaidi"){
+                                   $html += "<option value='" + item.com + "'>" +"百世（汇通）" + "</option>";
+                               }
+                               if(item.com == "shentong"){
+                                  $html += "<option value='" + item.com + "'>" +  "申通快递"+ "</option>";
+                               }
+                               if(item.com == "zhaijisong"){
+                                    $html += "<option value='" + item.com + "'>" +"宅急送" + "</option>";
+                               }
+                               if(item.com == "youshuwuliu"){
+                                  $html += "<option value='" + item.com + "'>" + "优速快递" + "</option>";
+                               }
+
+                           }
+                });
+                    $('#expressType').val("");
+                    $("#expressType").append($html);
+
+                //append后必须从新渲染
+                form.render('select');
+                    // console.log(result.companyTotal)
+                    // window.parent.location.reload();
+                },
+                error: function (result) { console.log(result)
+                    // window.parent.location.reload();
+                }
+            });
+
+          // layer.msg("按钮点击");
+      });
+
+      /*用户点击选择了区域之后，获取省市区数据，然后请求接口查询地点都有哪些网点*/
+        form.on('select(area)', function(data){
+            // console.log("sssssssssssssssssss",data)
+            // console.log($('#province').val())
+          //     var abc = new Array(3);
+          //             abc[0]=11;
+          //             abc[1]=11;
+          //             abc[2]=11;
+          //   abc.push(ue() +"-"+ ue() +"-"+ ue())
+          //
+          // console.log("asdasd",data,abc)
+          // layer.msg("我点了快递类型，数据呢，快死出来")
+          // $("#cate_goods").nextAll().remove();
+          // $.ajax({
+          //     url: "",
+          //     type: 'post',
+          //     data: {cid:data.value},
+          //     dataType:'json',
+          //     success: function (info) {
+          //         $('#cate_goods').after(info.ht);
+          //         $('#agent_id').val(info.gids);
+          //     }
+          // });
+      });
+
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            /*添加的时候，需要设置用户用户发送用户的地址信息*/
+           $('#sendUserLocation').val($('#province').val()+$('#city').val()+"市"+$('#area').val()+$('#address').val())
+            var json = $('#form').serialize();
+            json = decodeURIComponent(json, true);
+            $.ajaxSettings.headers = {"token": layui.data(layui.setter.tableName)['token']};
+            $.ajax({
+                url: '/deliverLogs/add',
+                type: "post",
+                data: json,
+                async: false,
+                success: function (result) {
+
+                    layer.msg('发货预约成功，请保持手机畅通，等待快递员联系您收件',{
+                        offset:['50%'],
+                        time: 5000 //2秒关闭（如果不配置，默认是3秒）
+                    },function(){
+                        window.parent.location.reload();
+                    });
+
+                },
+                error: function (result) {
+                    layer.msg('发货预约失败，请检查所填信息重新进行预约',{
+                        offset:['50%'],
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    },function(){
+                        // window.parent.location.reload();
+                    });
+
+                }
+            });
+        });
+    });
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>表单组合</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">编辑</div>
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" lay-filter="component-form-group" id="form">
+                <input type="hidden" name="diamondsId" th:value="${diamonds.diamondsId}">
+                <input type="hidden" name="diamondsTerminal" th:value="${diamonds.diamondsTerminal}">
+                <input type="hidden" name="diamondsType" th:value="${diamonds.diamondsType}">
+                <div class="layui-form-item" th:if="${diamonds.diamondsType == 1 || diamonds.diamondsType == 3}">
+                    <label class="layui-form-label"><span style="color: red">*</span>请输入名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="diamondsName" id="diamondsName" lay-verify="required|diamondsName"
+                               autocomplete="off"
+                               placeholder="请输入名称"
+                               class="layui-input" required="required" th:value="${diamonds.diamondsName}">
+                    </div>
+                </div>
+                <div class="layui-form-item" th:if="${diamonds.diamondsType == 2}">
+                    <label class="layui-form-label"><span style="color: red">*</span>请选择类型</label>
+                    <div class="layui-input-block">
+                        <select name="diamondsName" id="diamondsName" lay-verify="required|diamondsName" autocomplete="off"
+                                placeholder="请选择类型" lay-filter="diamondsName"
+                                class="layui-input" required="required">
+                            <option value="">请选择菜单级别</option>
+                            <option th:selected="${diamonds.diamondsName eq '月卡'}" value="月卡">月卡</option>
+                            <option th:selected="${diamonds.diamondsName eq '季卡'}" value="季卡">季卡</option>
+                            <option th:selected="${diamonds.diamondsName eq '年卡'}" value="年卡">年卡</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item" th:if="${diamonds.diamondsType == 2}">
+                    <label class="layui-form-label"><span style="color: red">*</span>月份描述</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="month" id="month"
+                               lay-verify="required|month" autocomplete="off"
+                               placeholder="月份描述"
+                               class="layui-input" required="required" th:value="${diamonds.month}" readonly>
+                    </div>
+                </div>
+                <div class="layui-form-item" th:if="${diamonds.diamondsTerminal == 1}">
+                    <label class="layui-form-label"><span style="color: red">*</span>请输入产品ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="diamondsProductId" id="diamondsProductId" lay-verify="required|diamondsProductId" autocomplete="off"
+                               placeholder="请输入产品ID"
+                               class="layui-input" required="required" th:value="${diamonds.diamondsProductId}">
+                    </div>
+                </div>
+                <input type="hidden" name="type" th:value="${diamonds.type}">
+                <div class="layui-form-item" th:if="${diamonds.diamondsTerminal == 1}">
+                    <label class="layui-form-label"><span style="color: red">*</span>请选择金额</label>
+                    <div class="layui-input-block">
+                        <div id="demo1" class="xm-select-demo"></div>
+                        <input type="hidden" name="diamondsPrice" id="diamondsPrice">
+                    </div>
+                </div>
+                <div class="layui-form-item" th:if="${diamonds.diamondsTerminal == 2}">
+                    <label class="layui-form-label"><span style="color: red">*</span>请输入金额</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="diamondsPrice" id="diamondsPrice" lay-verify="required|diamondsPrice" autocomplete="off"
+                               placeholder="请输入金额"
+                               class="layui-input" required="required" th:value="${diamonds.diamondsPrice}">
+                    </div>
+                </div>
+                <div class="layui-form-item" th:if="${diamonds.diamondsType == 3}">
+                    <label class="layui-form-label"><span style="color: red">*</span>请输入钻石数量</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="diamondsSize" id="diamondsSize" lay-verify="required|diamondsSize" autocomplete="off"
+                               placeholder="请输入钻石数量"
+                               class="layui-input" required="required" th:value="${diamonds.diamondsSize}" readonly>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script src="../../../layuiadmin/modules/xmSelect.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'upload', 'laydate', 'layedit', 'xmSelect'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , layedit = layui.layedit
+            , upload = layui.upload
+            , form = layui.form;
+
+
+        var demo1 = xmSelect.render({
+            el: '#demo1',
+            radio: true,
+            paging: true,
+            filterable: true,
+            initValue: [
+                [[${diamonds.diamondsPrice}]]
+            ],
+            on: function(data){
+                //arr:  当前多选已选中的数据
+                var arr = data.arr;
+                var bi = [[${yuan}]]
+                var qian = arr[0].value;
+                $("#diamondsSize").val(bi * qian)
+            },
+            data: [
+                {name: '6', value: 6},
+                {name: '12', value: 12},
+                {name: '18', value: 18},
+                {name: '25', value: 25},
+                {name: '30', value: 30},
+                {name: '40', value: 40},
+                {name: '45', value: 45},
+                {name: '50', value: 50},
+                {name: '60', value: 60},
+                {name: '68', value: 68},
+                {name: '73', value: 73},
+                {name: '78', value: 78},
+                {name: '88', value: 88},
+                {name: '93', value: 93},
+                {name: '98', value: 98},
+                {name: '108', value: 108},
+                {name: '113', value: 113},
+                {name: '118', value: 118},
+                {name: '123', value: 123},
+                {name: '128', value: 128},
+                {name: '138', value: 138},
+                {name: '148', value: 148},
+                {name: '153', value: 153},
+                {name: '158', value: 158},
+                {name: '163', value: 163},
+                {name: '168', value: 168},
+                {name: '178', value: 178},
+                {name: '188', value: 188},
+                {name: '193', value: 193},
+                {name: '198', value: 198},
+                {name: '208', value: 208},
+                {name: '218', value: 218},
+                {name: '223', value: 223},
+                {name: '228', value: 228},
+                {name: '233', value: 233},
+                {name: '238', value: 238},
+                {name: '243', value: 243},
+                {name: '248', value: 248},
+                {name: '253', value: 253},
+                {name: '258', value: 258},
+                {name: '263', value: 263},
+                {name: '268', value: 268},
+                {name: '273', value: 273},
+                {name: '278', value: 278},
+                {name: '283', value: 283},
+                {name: '288', value: 288},
+                {name: '298', value: 298},
+                {name: '308', value: 308},
+                {name: '318', value: 318},
+                {name: '328', value: 328},
+                {name: '348', value: 348},
+                {name: '388', value: 388},
+                {name: '418', value: 418},
+                {name: '448', value: 448},
+                {name: '488', value: 488},
+                {name: '518', value: 518},
+                {name: '548', value: 548},
+                {name: '588', value: 588},
+                {name: '618', value: 618},
+                {name: '648', value: 648},
+                {name: '698', value: 698},
+                {name: '798', value: 798},
+                {name: '818', value: 818},
+                {name: '848', value: 848},
+                {name: '898', value: 898},
+                {name: '998', value: 998},
+                {name: '1048', value: 1048},
+                {name: '1098', value: 1098},
+                {name: '1148', value: 1148},
+                {name: '1198', value: 1198},
+                {name: '1248', value: 1248},
+                {name: '1298', value: 1298},
+                {name: '1398', value: 1398},
+                {name: '1448', value: 1448},
+                {name: '1498', value: 1498},
+                {name: '1598', value: 1598},
+                {name: '1648', value: 1648},
+                {name: '1998', value: 1998},
+                {name: '2298', value: 2298},
+                {name: '2598', value: 2598},
+                {name: '2998', value: 2998},
+                {name: '3298', value: 3298},
+                {name: '3998', value: 3998},
+                {name: '4498', value: 4498},
+                {name: '4998', value: 4998},
+                {name: '5898', value: 5898},
+                {name: '6498', value: 6498}
+            ]
+        })
+
+
+        form.on('select(diamondsName)',function(data){
+            var check = $("#diamondsName").val();
+            if (check == '月卡'){
+                $("#month").val("1个月")
+            }else if (check == '季卡'){
+                $("#month").val("3个月")
+            }else if (check == '年卡'){
+                $("#month").val("12个月")
+            }
+        });
+
+        var elementById = document.getElementById("diamondsPrice");
+        elementById.oninput=function(){
+            var bi = [[${yuan}]]
+            var t = [[${diamonds.diamondsTerminal}]]
+            var qian = null;
+            if(t == 1) {
+                qian = demo1.getValue('valueStr');
+            }else {
+                qian = $("#diamondsPrice").val();
+            }
+            $("#diamondsSize").val(bi * qian)
+        }
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            var t = [[${diamonds.diamondsTerminal}]]
+            if(t == 1){
+                var selectArr = demo1.getValue('valueStr');
+                if (selectArr == null || selectArr == undefined || selectArr == ""){
+                    layer.msg("请选择金额")
+                    return false;
+                }
+                $("#diamondsPrice").val(selectArr);
+            }
+            var json = $('#form').serialize();
+            json = decodeURIComponent(json, true);
+            $.ajaxSettings.headers = {"token": layui.data(layui.setter.tableName)['token']};
+            $.ajax({
+                url: '/diamonds/update',
+                type: "post",
+                data: json,
+                async: false,
+                success: function (result) {
+                    if (result.status == 200){
+                        window.parent.location.reload();
+                    }else {
+                        layer.msg(result.message, {
+                            offset: '15px'
+                            , icon: 1
+                            , time: 2000
+                        }, function () {
+                            window.parent.location.reload();
+                        });
+                    }
+                },
+                error: function (result) {
+                    window.parent.location.reload();
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>
+

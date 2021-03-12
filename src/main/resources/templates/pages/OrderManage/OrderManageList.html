@@ -1,0 +1,248 @@
+<!--服务管理显示列表-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>LoveHeartDonation</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+
+</head>
+<body>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="">主页</a>
+        <a><cite>组件</cite></a>
+        <a><cite>数据表格</cite></a>
+        <a><cite>开启头部工具栏</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <form id="form">
+                        <div class="demoTable" style="margin-bottom: 10px">
+                            昵称：
+                            <div class="layui-inline">
+                                <input type="text" class="layui-input" name="userNickName" id="userNickName" autocomplete="off">
+                            </div>
+                            订单编号：
+                            <div class="layui-inline">
+                                <input type="text" class="layui-input" name="order_number" id="order_number" autocomplete="off">
+                            </div>
+                            下单时间：
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" name="create_time" id="create_time" placeholder="请选择时间">
+                            </div>
+                         订单状态：
+                    <div class="layui-inline">
+                        <select name="order_status" class="layui-input" style="width: 182px;" lay-filter="order_status" id="order_status" lay-verify="required">
+                            <option value="">请选择一个选项</option>
+                            <option value="1">待支付</option>
+                            <option value="2">待收货</option>
+                            <option value="3">已完成</option>
+                            <option value="4">已取消</option>
+                            <option value="5">已发货</option>
+                            <option value="6">未发货</option>
+                        </select>
+                    </div>
+                            <button class="layui-btn" data-type="reload" id="do_search">搜索</button>
+                        </div>
+                    </form>
+                    <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
+                    <!--<script type="text/html" id="toolbarDemo">-->
+                        <!--<div class="layui-btn-container">-->
+                            <!--<button type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i-->
+                                    <!--class="layui-icon" onclick="add()"></i></button>-->
+                        <!--</div>-->
+                    <!--</script>-->
+                    <script type="text/html" id="test-table-toolbar-barDemo">
+                        <a class="layui-btn layui-btn-xs" lay-event="show">订单详情</a>
+
+                        <a class="layui-btn layui-btn-xs" id="sendInfo" lay-event="send">发货</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script src="../../../layuiadmin/layui/lay/modules/jquery-3.4.0.js"></script>
+<script>
+    var json = $('#form').serialize();
+    json = decodeURIComponent(json, true);
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'form', 'laydate'], function () {
+        var laydate = layui.laydate;
+        //常规用法
+        laydate.render({
+            elem: '#create_time'
+        });
+
+        var admin = layui.admin
+            , table = layui.table
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , form = layui.form;
+        table.render({
+            skin: 'line', //行边框风格
+            elem: '#test-table-toolbar'
+            , id: 'OrderManager'
+            , url: '/orderManage/findListByPage'
+            , where: {json: json}
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            , cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , title: '礼物表'
+            , cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'},
+                    {align: 'center', field: 'id', title: 'id', unresize: true, sort: true},
+                    {align: 'center', field: 'userNickName', title: '用户昵称', unresize: true, sort: true},
+                    {align: 'center', field: 'headImg',
+                        templet:function(e){
+                            var headUrl = sessionStorage.getItem("photoUrl")+e.headImg;
+                            var photos = headUrl.split(",")
+                            var str = "";
+                            for (var i = 0; i < photos.length;i++){
+                                str += "<img src='" + photos[i] + "'  width=\"50px\" height=\"50px\">";
+                            }
+                            return '<div class="imgview" >' + str+'</a></div>';
+                            // return '<img src="'+headUrl+'" width="20px" height="20px" style="border-radius: 50%">';
+                        },
+                        title: '头像', unresize: true, sort: true},
+                    {align: 'center', field: 'userPhone', title: '手机号', unresize: true, sort: true},
+                    {align: 'center', field: 'orderNumber', title: '订单编号', unresize: true, sort: true},
+                    {align: 'center', field: 'createTime', title: '下单时间', unresize: true, sort: true},
+
+                    {align: 'center', field: 'orderStatus',
+                        /*订单状态（1：待支付，2：待收货，3：已完成，4：已取消,5：已发货，6：未发货）*/
+                        templet:function(e){
+                        if(e.orderStatus == "1"){
+                            return "待支付"
+                        }else if(e.orderStatus == "2"){
+                            return "待收货"
+                        }else if(e.orderStatus == "3"){
+                            return "已完成"
+                        }else if(e.orderStatus == "4"){
+                            return "已取消"
+                        }else if(e.orderStatus == "5"){
+                            return "已发货"
+                        }else if(e.orderStatus == "6"){
+                            // $('#sendInfo').attr("type","true");
+                            return "未发货"
+                        }
+                        },
+                        title: '订单状态', unresize: true, sort: true},
+                    {align: 'center', field: 'orderShopName', title: '商品名称', unresize: true, sort: true},
+                    {align: 'center', field: 'orderPrice', title: '单价', unresize: true, sort: true},
+                    {align: 'center', field: 'orderShopNumber', title: '对应数量', unresize: true, sort: true},
+                    {align: 'center', field: 'orderRealPrice', title: '实付金额', unresize: true, sort: true},
+                    {fixed: 'right', title: '操作', toolbar: '#test-table-toolbar-barDemo', width: 140}
+                ]
+            ]
+            ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 1 //设定初始在第 1 页
+                ,groups: 6 //只显示 6 个连续页码
+                ,first: true //显示首页
+                ,last: true //显示尾页
+
+            }
+        });
+        var $ = layui.$, active = {
+            reload: function () {
+                var json = $('#form').serialize();
+                json = decodeURIComponent(json, true);
+                //执行重载
+                table.reload('OrderManager', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , where: {json: json}
+                }, 'data');
+                return false;
+            }
+        };
+  $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+            return false;
+        });
+        //监听行工具事件
+        table.on('tool(test-table-toolbar)', function (obj) {
+            var data = obj.data;
+            // console.log(data)
+            var id = obj.data.id;
+            if (obj.event === 'send') {
+                if(data.orderStatus == "5"){
+                    //由于可能出现不可抗拒因素导致的发货错误，所以我们这里只对重复发货进行提醒，不做强制限制
+                    layer.confirm('此订单已发货，确认要再次发货吗？', {
+                            btn: ['继续','取消'] //可以无限个按钮
+                        }, function(index){
+                            //按钮【继续】的回调
+                        layer.msg('请注意！您在重复的进行发货操作',{
+                            offset:['50%'],
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        },function(){
+                             layer.open({
+                            type: 2,
+                                skin: 'layui-layer-rim',
+                                area: ['86%', '95%'],
+                                content: '/orderManage/pages/OrderManageDeliver?id='+id
+                        });
+                        });
+                        }, function(index){
+                            //按钮【按钮二】的回调
+                            layer.msg("取消发货")
+                        return false;
+                        }
+                    );
+                }else{
+                    layer.open({
+                            type: 2,
+                                skin: 'layui-layer-rim',
+                                area: ['86%', '95%'],
+                                content: '/orderManage/pages/OrderManageDeliver?id='+id
+                        });
+                }
+
+            }else if (obj.event === 'show') {
+                layer.open({
+                    type: 2,
+                    skin: 'layui-layer-rim',
+                    area: ['86%', '95%'],
+                    content: '/orderManage/pages/OrderManageShow?id=' + id
+                });
+            }
+        });
+
+    });
+
+    /*激活新增弹窗页面，这个需要在后台配置返回页面的路径*/
+    function add() {
+        layer.open({
+            type: 2,
+            skin: 'layui-layer-rim',
+            area: ['86%', '95%'],
+            content: '/orderManage/pages/OrderManageAdd'
+        });
+    }
+
+    $("body").on("click", ".imgview", function (e) {
+        layer.photos({photos: {"data": [{"src": e.target.src}]}});
+    });
+</script>
+</body>
+</html>

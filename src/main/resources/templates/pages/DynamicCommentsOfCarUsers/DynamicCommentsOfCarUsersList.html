@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <title>App轮播图数据表格</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+
+</head>
+<body>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="">主页</a>
+    <a><cite>组件</cite></a>
+    <a><cite>数据表格</cite></a>
+    <a><cite>开启头部工具栏</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-body">
+          <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
+          <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+              <button type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i
+                      class="layui-icon" onclick="add()"></i></button>
+            </div>
+          </script>
+          <script type="text/html" id="test-table-toolbar-barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script src="../../../layuiadmin/layui/lay/modules/jquery-3.4.0.js"></script>
+<script>
+  var json = $('#form').serialize();
+  json = decodeURIComponent(json, true);
+  layui.config({
+    base: '../../../layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'table', 'form', 'laydate'], function () {
+    var admin = layui.admin
+            , table = layui.table
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , form = layui.form;
+    table.render({
+      skin: 'line', //行边框风格
+      elem: '#test-table-toolbar'
+      , id: 'DynamicCommentsOfCarUsers'
+      , url: '/dynamicCommentsOfCarUsers/findListByPage'
+      , where: {json: json}
+      , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+      , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+      , title: '车友动态评论表'
+      , cols: [
+        [
+          {type: 'checkbox', fixed: 'left'},
+              {align:'center',field: 'id', title: 'id',fixed: 'left', unresize: true, sort: true},
+              {align:'center',field: 'dynamicIdOrCommentId', title: '动态id/评论id 主要看级别', unresize: true, sort: true},
+              {align:'center',field: 'memberId', title: '评论人', unresize: true, sort: true},
+              {align:'center',field: 'memberHead', title: '头像', unresize: true, sort: true},
+              {align:'center',field: 'memberNickName', title: '昵称', unresize: true, sort: true},
+              {align:'center',field: 'context', title: '评论内容', unresize: true, sort: true},
+              {align:'center',field: 'addTime', title: '评论时间', unresize: true, sort: true},
+              {align:'center',field: 'level', title: '评论级别 1：直接评论动态2：回复评论', unresize: true, sort: true},
+          {fixed: 'right', title: '操作', toolbar: '#test-table-toolbar-barDemo', width: 150}
+        ]
+      ]
+  ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+      layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+      //,curr: 1 //设定初始在第 1 页
+      ,groups: 6 //只显示 6 个连续页码
+      ,first: true //显示首页
+      ,last: true //显示尾页
+
+    }
+  });
+    var $ = layui.$, active = {
+      reload: function () {
+        var json = $('#form').serialize();
+        json = decodeURIComponent(json, true);
+        //执行重载
+        table.reload('tableOne', {
+          page: {
+            curr: 1 //重新从第 1 页开始
+          }
+          , where: {json: json}
+        }, 'data');
+        return false;
+      }
+    };
+
+    $('.demoTable .layui-btn').on('click', function () {
+      var type = $(this).data('type');
+      active[type] ? active[type].call(this) : '';
+      return false;
+    });
+    //监听行工具事件
+    table.on('tool(test-table-toolbar)', function (obj) {
+      var data = obj.data;
+          var id = obj.data.id;
+      if (obj.event === 'del') {
+        layer.confirm('真的删除行么', function (index) {
+          obj.del();
+          $.ajaxSettings.async = false;//同步加载
+          $.ajaxSettings.headers = {"token":layui.data(layui.setter.tableName)['token']};
+        $.get("/dynamicCommentsOfCarUsers/delete" + '?id=' + id, function (result) {
+            layer.msg(result.message);
+          });
+          layer.close(index);
+        });
+      } else if (obj.event === 'edit') {
+        layer.open({
+          type: 2,
+          skin: 'layui-layer-rim',
+          area : ['86%', '95%'],
+          content: '/dynamicCommentsOfCarUsers/pages/DynamicCommentsOfCarUsersUpdate?id=' + id
+        });
+      }
+    });
+
+    /* 监听指定开关 */
+    form.on('switch(dynamicReleaseState)', function (data) {
+      //得到的是显示后的值
+      var x = data.elem.checked;
+      layer.open({
+        content: '确定更改发布状态为：' + (this.checked ? '已发布' : '未发布')
+        , btn: ['确定', '取消']
+        , yes: function (index, layero) {
+          data.elem.checked = x;
+          form.render();
+          layer.close(index);
+          //按钮【按钮一】的回调
+        }
+        , btn2: function (index, layero) {
+          //按钮【按钮二】的回调
+          data.elem.checked = !x;
+          form.render();
+          layer.close(index);
+          //return false 开启该代码可禁止点击该按钮关闭
+        }
+        , cancel: function () {
+          //右上角关闭回调
+          data.elem.checked = !x;
+          form.render();
+          //return false 开启该代码可禁止点击该按钮关闭
+        }
+      });
+      return false;
+
+    });
+
+  });
+
+  function add() {
+    layer.open({
+      type: 2,
+      skin: 'layui-layer-rim',
+      area : ['86%', '95%'],
+      content: '/dynamicCommentsOfCarUsers/pages/DynamicCommentsOfCarUsersAdd'
+    });
+  }
+
+  $("body").on("click", ".imgview", function (e) {
+    layer.photos({photos: {"data": [{"src": e.target.src}]}});
+  });
+</script>
+</body>
+</html>

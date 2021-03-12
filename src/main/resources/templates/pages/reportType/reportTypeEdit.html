@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>修改数据</title>
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+<body class="layui-bg-gray">
+<div class="layui-row">
+    <div class="layui-col-md12">
+        <div class="layui-card" style="margin: 10px;">
+            <div class="layui-card-body">
+                <form class="layui-form" action="" id="form" lay-filter="reportTypeForm">
+                    <input name="reportTypeId" type="text" style="display: none" th:value="${reportType.reportTypeId}">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><span style="color: red;">*</span>请输入分类名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="reportTypeName" id="reportTypeName" lay-verify="required"
+                                   placeholder="请输入" autocomplete="off" class="layui-input"
+                                   th:value="${reportType.reportTypeName}">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="formBtn">立即提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script src="../../../layuiadmin/layui/lay/modules/jquery-3.4.0.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'form', 'laydate'], function () {
+        var admin = layui.admin
+            , table = layui.table
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , form = layui.form;
+
+
+        //监听提交
+        form.on('submit(formBtn)', function(data) {
+            var json = $('#form').serialize();
+            json = decodeURIComponent(json, true);
+            $.ajaxSettings.headers = {"token": layui.data(layui.setter.tableName)['token']};
+            $.ajax({
+                url: '/reportType/editReportType',
+                type: "post",
+                data: json,
+                async: false,
+                success: function (result) {
+                    if (result.status == 200) {
+                        window.parent.location.reload();
+                    } else {
+                        layer.msg(result.message, {
+                            offset: '15px'
+                            , icon: 2
+                            , time: 1000
+                        }, function () {
+                            window.parent.location.reload();
+                        });
+                    }
+                },
+                error: function (result) {
+                    window.parent.location.reload();
+                }
+            });
+        });
+
+    });
+</script>
+</body>
+</html>

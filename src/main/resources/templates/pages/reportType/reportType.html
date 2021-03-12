@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="">主页</a>
+        <a><cite>组件</cite></a>
+        <a><cite>数据表格</cite></a>
+        <a><cite>开启头部工具栏</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <form id="form">
+                        <div class="demoTable" style="margin-bottom: 10px">
+                            分类名称：
+                            <div class="layui-inline">
+                                <input class="layui-input" name="report_type_name"
+                                       id="report_type_name" autocomplete="off">
+                            </div>
+                            <button class="layui-btn" data-type="reload" id="do_search">搜索</button>
+                        </div>
+                    </form>
+                    <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
+                    <script type="text/html" id="toolbarDemo">
+                        <div class="layui-btn-container">
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i
+                                    class="layui-icon" onclick="add()"></i></button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="test-table-toolbar-barDemo">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script src="../../../layuiadmin/layui/lay/modules/jquery-3.4.0.js"></script>
+<script>
+    var json = $('#form').serialize();
+    json = decodeURIComponent(json, true);
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'form', 'laydate'], function () {
+        var admin = layui.admin
+            , table = layui.table
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , form = layui.form;
+
+        var tableIns = table.render({
+            skin: 'line', //行边框风格
+            elem: '#test-table-toolbar'
+            , id: 'reportTypeTable'
+            , url: '/reportType/findListByPage'
+            , where: {json: json}
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , title: '举报分类表'
+            , cols: [
+                [ //表头
+                    {type: 'checkbox', fixed: 'left'}
+                    , {field: 'reportTypeId', title: '分类ID'}
+                    , {field: 'reportTypeName', title: '分类名称'}
+                    , {field: 'reportTypeCreateTime', title: '创建时间'}
+                    , {field: 'reportTypeEditTime', title: '编辑时间'}
+                    , {fixed: 'right', width: 150, align: 'center', toolbar: '#test-table-toolbar-barDemo', title: '操作'}
+                ]
+            ]
+        });
+
+        var $ = layui.$, active = {
+            reload: function () {
+                var json = $('#form').serialize();
+                json = decodeURIComponent(json, true);
+                //执行重载
+                table.reload('reportTypeTable', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , where: {json: json}
+                }, 'data');
+                return false;
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+            return false;
+        });
+        //监听行工具事件
+        table.on('tool(test-table-toolbar)', function (obj) {
+            var data = obj.data;
+            var id = obj.data.reportTypeId;
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    $.ajaxSettings.async = false;//同步加载
+                    $.ajaxSettings.headers = {"token": layui.data(layui.setter.tableName)['token']};
+                    $.get("/reportType/delete" + '?reportTypeId=' + id, function (result) {
+                        layer.msg(result.message);
+                    });
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                layer.open({
+                    type: 2,
+                    skin: 'layui-layer-rim',
+                    area: ['86%', '95%'],
+                    content: '/reportType/pages/ReportTypeDetail?id=' + id
+                });
+            }
+        });
+    });
+
+    function add() {
+        layer.open({
+            type: 2,
+            skin: 'layui-layer-rim',
+            area: ['86%', '95%'],
+            content: '/reportType/pages/reportType/reportTypeAdd'
+        });
+    }
+
+</script>
+</body>

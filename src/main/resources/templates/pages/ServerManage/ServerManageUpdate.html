@@ -1,0 +1,320 @@
+<!--服务管理部分的更新部分-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>表单组合</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">更新</div>
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" lay-filter="component-form-group" id="form">
+                <input type="hidden" name="id" th:value="${serverManage.id}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>选择类型</label>
+                    <div class="layui-input-block">
+                        <select name="serverTypeId" lay-filter="serverTypeId" id="serverTypeId" lay-verify="required">
+                            <option value="">请选择一个选项</option>
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>请上传封面图</label>
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="test1">上传封面图</button>
+                        <div class="layui-upload-list">
+                            <img class="layui-upload-img" th:src="${serverManage.serverCover}" id="demo1" style="width: 300px;height: 300px">
+                            <input type="hidden" name="serverCover" id="serverCover">
+                        </div>
+                    </div>
+                </div>
+
+
+
+ <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>请上传图片介绍</label>
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="test2">上传图片介绍</button>
+                        <div class="layui-upload-list">
+                            <img class="layui-upload-img" th:src="${serverManage.serverIntroduce}" id="demo2" style="width: 300px;height: 300px">
+                            <input type="hidden" name="serverIntroduce" id="serverIntroduce">
+                        </div>
+                    </div>
+                </div>
+ <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="serverTitle" id="serverTitle" autocomplete="off"
+                               placeholder="请输入标题" th:value="${serverManage.serverTitle}"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+  <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>价格</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="serverPrice" id="serverPrice" autocomplete="off"
+                               placeholder="请输入金额" min="0" max="900000000" th:value="${serverManage.serverPrice}"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+ <!--<div class="layui-form-item">-->
+                    <!--<label class="layui-form-label"><span style="color: red">*</span>市区</label>-->
+                    <!--<div class="layui-input-block">-->
+                        <!--<input type="text" name="city" id="city" autocomplete="off"-->
+                               <!--placeholder="请输入市区（例如：上海市）" th:value="${serverManage.city}"-->
+                               <!--class="layui-input" required="required">-->
+                    <!--</div>-->
+                <!--</div>-->
+
+
+ <!--省市区选择寄件人地址-->
+                        <div class="layui-form-item" id="addressDiv1">
+                            <label class="layui-form-label"><span style="color: red">*</span>市区信息</label>
+                    <div class="layui-input-block">
+                            <div class="layui-input-inline">
+                                <select name="P1" lay-filter="province" id="province" lay-verify="required">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select name="C1" lay-filter="city"  th:value="${serverManage.city} "id="citys" lay-verify="required">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        </div>
+                <!--省市区选择-->                <!--<div class="layui-form-item">-->
+                    <!--<label class="layui-form-label"><span style="color: red">*</span>图文介绍</label>-->
+                    <!--<div class="layui-input-block">-->
+                        <!--&lt;!&ndash;<textarea placeholder="请输入项目说明" name="loveExplain" id="loveExplain" class="layui-textarea"></textarea>&ndash;&gt;-->
+                        <!--<textarea name=""  th:text="${serverManage.serverIntroduce}" id="edit"></textarea>-->
+                        <!--<input type="hidden" name="serverIntroduce" id="serverIntroduce">-->
+                        <!--&lt;!&ndash;<input type="textarea" name="gameSort" id="gameSort" autocomplete="off"&ndash;&gt;-->
+                        <!--&lt;!&ndash;placeholder=""&ndash;&gt;-->
+                        <!--&lt;!&ndash;class="layui-input" required="required">&ndash;&gt;-->
+                    <!--</div>-->
+                <!--</div>-->
+
+
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <input type="hidden" id="width" th:value="${serverManage.width}" name="width" />
+                            <input type="hidden" id="city" th:value="${serverManage.city}"  name="city" />
+                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../../../layuiadmin/layui/lay/modules/jquery-3.4.0.js"></script>
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script src="../../../layuiadmin/js/select.js" type="text/javascript" charset="utf-8"></script>
+<script>
+
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'upload', 'laydate', 'layedit'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , layedit = layui.layedit
+            , upload = layui.upload
+            , form = layui.form;
+
+
+        var uploadInst = upload.render({
+            elem: '#test1'
+            , url: '/jiaoyou/file/UploadFile' //改成您自己的上传接口
+            , headers: {"token": layui.data(layui.setter.tableName)['token']}
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.status != 200) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                layer.msg('上传成功');
+                $("#serverCover").val(res.data)
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+      var base64Value = "";
+   var uploadInst = upload.render({
+            elem: '#test2'
+            , url: '/jiaoyou/file/UploadFile' //改成您自己的上传接口
+            , headers: {"token": layui.data(layui.setter.tableName)['token']}
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    base64Value = result;
+                    $('#demo2').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.status != 200) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                layer.msg('上传成功');  // 创建对象
+               var img = new Image();
+               img.src = base64Value;
+               // console.log("woshi", base64Value)
+               // 打印
+               $('#width').attr('value', (img.width/img.height).toFixed(2)); //图片链接（base64）
+               // console.log('width:'+img.width+',height:'+img.height,$('#width').attr('value'));
+                $("#serverIntroduce").val(res.data)
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+  // form.on('select(citys)', function(data){
+  //            var str = $('#citys').val() +"市";
+  //         // console.log(str)
+  //     });
+
+ //异步加载下拉框数据
+        $.ajaxSettings.headers = {"token":layui.data(layui.setter.tableName)['token']};
+        $.get("/serverType/getAll", function (data) {
+            var $html = "";
+            // $html += "<option value=''>请选择或搜索一级菜单</option>";
+            if (data != null) {
+                $.each(data, function (index, item) {
+                    $html += "<option value='" + item.id + "'>" + item.serverTitle + "</option>";
+                });
+                $("#serverTypeId").append($html);
+                //append后必须从新渲染
+                form.render('select');
+            }
+        });
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            // var content = tt.get('#edit').getContent()
+            // $("#serverIntroduce").val(encodeURIComponent(content))
+ //因为是拼接的路径，所有上传到数据库之后，不能有前部分的凭借路径，在这里需要去掉
+            if($('#demo1')[0].src.length < 100){
+            $('#serverCover').val($('#demo1')[0].src)
+            }
+            if($('#demo2')[0].src.length < 100){
+            $('#serverIntroduce').val($('#demo2')[0].src)
+            }
+            /*设置市区信息*/
+            // $('#city').val( $('#citys').val()+"市")
+            if($('#citys').val()=="全部"){
+                $('#city').val($('#city').val());
+            }else{
+                $('#city').val($('#citys').val()+"市");
+            }
+             $('#width').val($('#width').val())
+
+
+            var json = $('#form').serialize();
+            json = decodeURIComponent(json, true);
+            $.ajaxSettings.headers = {"token": layui.data(layui.setter.tableName)['token']};
+            $.ajax({
+                url: '/serverManager/update',
+                type: "post",
+                data: json,
+                async: false,
+                success: function (result) {
+                    window.parent.location.reload();
+                },
+                error: function (result) {
+                    window.parent.location.reload();
+                }
+            });
+        });
+    });
+    // layui.extend({
+    //     tinymce: '../../../layuiadmin/tinymce/tinymce'
+    // }).use(['tinymce', 'util', 'layer'], function () {
+    //     var t = layui.tinymce;
+    //     tt = layui.tinymce;
+    //     var util = layui.util;
+    //     t.init({
+    //         selector: '#edit',
+    //         //skin:'oxide-dark',
+    //         language:'zh_CN',
+    //         plugins: 'print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media template code codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists wordcount imagetools textpattern help emoticons autosave bdmap indent2em autoresize lineheight formatpainter axupimgs',
+    //         toolbar: 'code undo redo restoredraft | cut copy paste pastetext | forecolor backcolor bold italic underline strikethrough link anchor | alignleft aligncenter alignright alignjustify outdent indent | table image media charmap emoticons hr pagebreak insertdatetime print preview |\
+    //                  styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript superscript removeformat | indent2em lineheight formatpainter |fullscreen|\ ',
+    //         height: 650, //编辑器高度
+    //         min_height: 532,
+    //         fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px 72px',
+    //         font_formats: '微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif;仿宋体=FangSong,serif;黑体=SimHei,sans-serif;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats;知乎配置=BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;小米配置=Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,Heiti SC,WenQuanYi Micro Hei,sans-serif',
+    //
+    //         //importcss_append: true,
+    //
+    //         //content_security_policy: "script-src *;",
+    //         extended_valid_elements:'script[src]',
+    //         //
+    //         template_cdate_format: '[CDATE: %m/%d/%Y : %H:%M:%S]',
+    //         template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
+    //         autosave_ask_before_unload: false,
+    //         toolbar_mode : 'wrap',
+    //         images_upload_handler: function (blobInfo, succFun, failFun) {
+    //             var xhr, formData;
+    //             var file = blobInfo.blob();//转化为易于理解的file对象
+    //             xhr = new XMLHttpRequest();
+    //             xhr.withCredentials = false;
+    //             xhr.open('POST', '/jiaoyou/file/UploadFile1');
+    //             xhr.setRequestHeader("token",layui.data(layui.setter.tableName)['token']);
+    //             xhr.onload = function() {
+    //                 var json;
+    //                 if (xhr.status != 200) {
+    //                     failFun('HTTP Error: ' + xhr.status);
+    //                     return;
+    //                 }
+    //                 json = JSON.parse(xhr.responseText);
+    //
+    //                 var data= window.location.host +  json.data;
+    //                 succFun(data);
+    //             };
+    //             formData = new FormData();
+    //             formData.append('file', file, file.name );//此处与源文档不一样
+    //             xhr.send(formData);
+    //         },
+    //         icons:'ax-color',
+    //     });
+    // });
+</script>
+
+</body>
+</html>

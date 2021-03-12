@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqi.jiaoyou.mapper.RedLogDao">
+
+    <resultMap type="com.qiqi.jiaoyou.entity.RedLog" id="RedLogMap">
+        <result property="redLogId" column="red_log_id" jdbcType="INTEGER"/>
+        <result property="redLogMemberId" column="red_log_member_id" jdbcType="INTEGER"/>
+        <result property="redLogMemberNickName" column="red_log_member_nick_name" jdbcType="VARCHAR"/>
+        <result property="redLogMemberHead" column="red_log_member_head" jdbcType="VARCHAR"/>
+        <result property="redLogGoldSize" column="red_log_gold_size" jdbcType="INTEGER"/>
+        <result property="redLogRedSize" column="red_log_red_size" jdbcType="INTEGER"/>
+        <result property="redLogNumberReceipts" column="red_log_number_receipts" jdbcType="INTEGER"/>
+        <result property="redLogNumberRemaining" column="red_log_number_remaining" jdbcType="INTEGER"/>
+        <result property="redLogSendTime" column="red_log_send_time" jdbcType="TIMESTAMP"/>
+        <result property="redLogEndTime" column="red_log_end_time" jdbcType="TIMESTAMP"/>
+        <result property="redLogSex" column="red_log_sex" jdbcType="INTEGER"/>
+        <result property="redLogRemarks" column="red_log_remarks" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="RedLogMap">
+        select
+          red_log_id, red_log_member_id, red_log_member_nick_name, red_log_member_head, red_log_gold_size, red_log_red_size, red_log_number_receipts, red_log_number_remaining, red_log_send_time, red_log_end_time, red_log_sex, red_log_remarks, type, state
+        from jiaoyou.red_log
+        where red_log_id = #{redLogId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="RedLogMap">
+        select
+          red_log_id, red_log_member_id, red_log_member_nick_name, red_log_member_head, red_log_gold_size, red_log_red_size, red_log_number_receipts, red_log_number_remaining, red_log_send_time, red_log_end_time, red_log_sex, red_log_remarks, type, state
+        from jiaoyou.red_log
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="RedLogMap">
+        select
+        red_log_id, red_log_member_id, red_log_member_nick_name, red_log_member_head, red_log_gold_size,
+        red_log_red_size, red_log_number_receipts, red_log_number_remaining, red_log_send_time, red_log_end_time,
+        red_log_sex, red_log_remarks, type, state
+        from jiaoyou.red_log
+        <where>
+            <if test="redLogId != null">
+                and red_log_id = #{redLogId}
+            </if>
+            <if test="redLogMemberId != null">
+                and red_log_member_id = #{redLogMemberId}
+            </if>
+            <if test="redLogMemberNickName != null and redLogMemberNickName != ''">
+                and red_log_member_nick_name = #{redLogMemberNickName}
+            </if>
+            <if test="redLogMemberHead != null and redLogMemberHead != ''">
+                and red_log_member_head = #{redLogMemberHead}
+            </if>
+            <if test="redLogGoldSize != null">
+                and red_log_gold_size = #{redLogGoldSize}
+            </if>
+            <if test="redLogRedSize != null">
+                and red_log_red_size = #{redLogRedSize}
+            </if>
+            <if test="redLogNumberReceipts != null">
+                and red_log_number_receipts = #{redLogNumberReceipts}
+            </if>
+            <if test="redLogNumberRemaining != null">
+                and red_log_number_remaining = #{redLogNumberRemaining}
+            </if>
+            <if test="redLogSendTime != null">
+                and red_log_send_time = #{redLogSendTime}
+            </if>
+            <if test="redLogEndTime != null">
+                and red_log_end_time = #{redLogEndTime}
+            </if>
+            <if test="redLogSex != null">
+                and red_log_sex = #{redLogSex}
+            </if>
+            <if test="redLogRemarks != null and redLogRemarks != ''">
+                and red_log_remarks = #{redLogRemarks}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="redLogId" useGeneratedKeys="true">
+        insert into jiaoyou.red_log(red_log_member_id, red_log_member_nick_name, red_log_member_head, red_log_gold_size, red_log_red_size, red_log_number_receipts, red_log_number_remaining, red_log_send_time, red_log_end_time, red_log_sex, red_log_remarks, type, state)
+        values (#{redLogMemberId}, #{redLogMemberNickName}, #{redLogMemberHead}, #{redLogGoldSize}, #{redLogRedSize}, #{redLogNumberReceipts}, #{redLogNumberRemaining}, #{redLogSendTime}, #{redLogEndTime}, #{redLogSex}, #{redLogRemarks}, #{type}, #{state})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update jiaoyou.red_log
+        <set>
+            <if test="redLogMemberId != null">
+                red_log_member_id = #{redLogMemberId},
+            </if>
+            <if test="redLogMemberNickName != null and redLogMemberNickName != ''">
+                red_log_member_nick_name = #{redLogMemberNickName},
+            </if>
+            <if test="redLogMemberHead != null and redLogMemberHead != ''">
+                red_log_member_head = #{redLogMemberHead},
+            </if>
+            <if test="redLogGoldSize != null">
+                red_log_gold_size = #{redLogGoldSize},
+            </if>
+            <if test="redLogRedSize != null">
+                red_log_red_size = #{redLogRedSize},
+            </if>
+            <if test="redLogNumberReceipts != null">
+                red_log_number_receipts = #{redLogNumberReceipts},
+            </if>
+            <if test="redLogNumberRemaining != null">
+                red_log_number_remaining = #{redLogNumberRemaining},
+            </if>
+            <if test="redLogSendTime != null">
+                red_log_send_time = #{redLogSendTime},
+            </if>
+            <if test="redLogEndTime != null">
+                red_log_end_time = #{redLogEndTime},
+            </if>
+            <if test="redLogSex != null">
+                red_log_sex = #{redLogSex},
+            </if>
+            <if test="redLogRemarks != null and redLogRemarks != ''">
+                red_log_remarks = #{redLogRemarks},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+        </set>
+        where red_log_id = #{redLogId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from jiaoyou.red_log where red_log_id = #{redLogId}
+    </delete>
+
+</mapper>

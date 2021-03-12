@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqi.jiaoyou.mapper.RiderDynamicsMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.qiqi.jiaoyou.pojo.RiderDynamics">
+                    <id column="id" property="id"/>
+                    <result column="memerId" property="memerId"/>
+                    <result column="memberHead" property="memberHead"/>
+                    <result column="memberNickName" property="memberNickName"/>
+                    <result column="memberSex" property="memberSex"/>
+                    <result column="memberAge" property="memberAge"/>
+                    <result column="city" property="city"/>
+                    <result column="addTime" property="addTime"/>
+                    <result column="context" property="context"/>
+                    <result column="images" property="images" />
+                    <result column="video" property="video" />
+                    <result column="likeSize" property="likeSize"/>
+                    <result column="commentSize" property="commentSize"/>
+                    <result column="state" property="state"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+            id, memerId, memberHead, memberNickName, memberSex, memberAge, city,addTime, context,images,video, likeSize, commentSize, state
+        </sql>
+
+</mapper>

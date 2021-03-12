@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqi.jiaoyou.mapper.AcceptOfflineActivitiesMapper">
+    <select id="joinList" resultType="com.qiqi.jiaoyou.vo.AcceptOfflineActivitiesVo">
+        select
+        <include refid="field" />
+        from
+        <include refid="join" />
+        <where>
+
+            a.closeType=1 and a.keepAnAppointmentState != 5
+            and a.keepAnAppointmentState != 6
+            <if test="name != null and name != ''">
+                and m.nickName = #{name}
+            </if>
+            <if test="theme != null and theme != ''">
+                and s.activityTheme = #{theme}
+            </if>
+            <if test="time != null and time != ''">
+                and s.time >= #{time}
+            </if>
+            <if test="status != null and status != ''">
+                and s.state = #{status}
+            </if>
+            order by s.id desc
+        </where>
+    </select>
+
+    <sql id="join">
+        accept_offline_activities a inner join member m on m.id = a.acceptMemberId inner join
+        send_offline_activities s on s.id = a.sendOfflineActivities
+    </sql>
+    <sql id="field">
+        a.id,a.keepAnAppointmentState,a.keepAnAppointmentTime,a.keepAnAppointmentState
+        ,m.head,m.nickName,m.phone,s.activityTheme,s.startTime,s.address
+        ,s.perSize,s.averageDiamondsSize
+    </sql>
+</mapper>

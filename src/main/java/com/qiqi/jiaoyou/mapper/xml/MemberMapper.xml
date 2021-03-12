@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqi.jiaoyou.mapper.MemberMapper">
+        <!-- 通用查询映射结果 -->
+    <resultMap type="com.qiqi.jiaoyou.pojo.Member" id="BaseResultMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="nickName" column="nickName" jdbcType="VARCHAR"/>
+        <result property="head" column="head" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" jdbcType="INTEGER"/>
+        <result property="age" column="age" jdbcType="INTEGER"/>
+        <result property="IDNumber" column="IDNumber" jdbcType="VARCHAR"/>
+        <result property="province" column="province" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="area" column="area" jdbcType="VARCHAR"/>
+        <result property="addTime" column="addTime" jdbcType="TIMESTAMP"/>
+        <result property="isvip" column="isvip" jdbcType="INTEGER"/>
+        <result property="memberExpirationDate" column="memberExpirationDate" jdbcType="TIMESTAMP"/>
+        <result property="enableSate" column="enableSate" jdbcType="INTEGER"/>
+        <result property="pid" column="pid" jdbcType="INTEGER"/>
+        <result property="recommended" column="recommended" jdbcType="INTEGER"/>
+        <result property="facePhoto" column="facePhoto" jdbcType="VARCHAR"/>
+        <result property="positivePhotoOfIDCard" column="positivePhotoOfIDCard" jdbcType="VARCHAR"/>
+        <result property="level" column="level" jdbcType="INTEGER"/>
+        <result property="invitationCode" column="invitationCode" jdbcType="VARCHAR"/>
+        <result property="examineState" column="examineState" jdbcType="INTEGER"/>
+        <result property="registrationChannel" column="registrationChannel" jdbcType="INTEGER"/>
+        <result property="reason" column="reason" jdbcType="VARCHAR"/>
+        <result property="token" column="token" jdbcType="VARCHAR"/>
+        <result property="loginSize" column="loginSize" jdbcType="INTEGER"/>
+        <result property="backgroundImages" column="backgroundImages" jdbcType="VARCHAR"/>
+        <result property="pushId" column="pushId" jdbcType="VARCHAR"/>
+        <result property="carLable" column="carLable" jdbcType="VARCHAR"/>
+        <result property="isCustomer" column="isCustomer" jdbcType="INTEGER"/>
+        <result property="longitude" column="longitude" jdbcType="VARCHAR"/>
+        <result property="latitude" column="latitude" jdbcType="VARCHAR"/>
+        <result property="loginTimeofOne" column="loginTimeofOne" jdbcType="TIMESTAMP"/>
+        <result property="todayLoginTime" column="todayLoginTime" jdbcType="TIMESTAMP"/>
+        <result property="numberOfRemainingFriendsToAdd" column="numberOfRemainingFriendsToAdd" jdbcType="INTEGER"/>
+        <result property="video" column="video" jdbcType="VARCHAR"/>
+        <result property="activitySize" column="activitySize" jdbcType="INTEGER"/>
+        <result property="delUserStatus" column="delUserStatus" jdbcType="VARCHAR"/>
+        <result property="drivingLicensePhoto" column="drivingLicensePhoto" jdbcType="VARCHAR"/>
+        <result property="registrationModel" column="registrationModel" jdbcType="INTEGER"/>
+        <result property="carModel" column="carModel" jdbcType="VARCHAR"/>
+        <result property="onLine" column="onLine" jdbcType="VARCHAR"/>
+    </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+            video,id, nickName,examineState,reason,registrationChannel,backgroundImages,head, name, phone, sex, age, IDNumber, province, city, area, addTime, memberExpirationDate, enableSate, facePhoto, positivePhotoOfIDCard, level
+            <!--id,nickName,head,name,phone,password,sex,age,IDNumber,,province,city,area,addTime,isvip,memberExpirationDate,enableSate,pid,recommended,facePhoto,positivePhotoOfIDCard,level,invitationCode,examineState,registrationChannel,reason,,token,loginSize,backgroundImages,pushId,carLable,isCustomer,longitude,latitude,loginTimeofOne,todayLoginTime,numberOfRemainingFriendsToAdd,video,activitySize,delUserStatus,drivingLicensePhoto,registrationModel,carModel,onLine,-->
+        </sql>
+
+    <update id="updateMember" parameterType="com.qiqi.jiaoyou.pojo.Member">
+        update member
+        <trim suffix="set" prefixOverrides="," prefix="where id=#{id}">
+            <if test="examineState!=null">examineState=#{examineState},</if>
+            <if test="carLable!=null">carLable=#{carLable},</if>
+            <if test="reason!=null">reason=#{reason}</if>
+        </trim>
+    </update>
+
+
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqi.jiaoyou.举报信息.mapper.ReportMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qiqi.jiaoyou.pojo.Report">
+        <id column="report_id" property="reportId" />
+        <result column="report_informant_id" property="reportInformantId" />
+        <result column="report_informant_head" property="reportInformantHead" />
+        <result column="report_informant_nick_name" property="reportInformantNickName" />
+        <result column="report_informant_phone" property="reportInformantPhone" />
+        <result column="report_bei_informant_id" property="reportBeiInformantId" />
+        <result column="report_bei_informant_head" property="reportBeiInformantHead" />
+        <result column="report_bei_informant_nick_name" property="reportBeiInformantNickName" />
+        <result column="report_bei_informant_phone" property="reportBeiInformantPhone" />
+        <result column="report_reason" property="reportReason" />
+        <result column="report_context" property="reportContext" />
+        <result column="report_add_time" property="reportAddTime" />
+        <result column="report_Examine_state" property="reportExamineState" />
+        <result column="report_Examone_reason" property="reportExamoneReason" />
+    </resultMap>
+</mapper>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>表单组合</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+<style>
+    .tox .tox-dialog{
+        border: none;
+    }
+
+    .tox .tox-dialog,
+    .tox .tox-button,
+    .tox .tox-textarea,
+    .tox .tox-textfield,
+    .tox .tox-selectfield select,
+    .tox .tox-toolbar-textfield{
+        border-radius: 0;
+    }
+    .tox .tox-dialog-wrap__backdrop{
+        background-color: rgba(0, 0, 0, .3);
+    }
+</style>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">编辑</div>
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" lay-filter="component-form-group" id="form">
+                <input type="hidden" name="untitled" value="1">
+                <input type="hidden" id="type" th:value="${type}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>请输入内容</label>
+                    <div class="layui-input-block">
+                        <textarea th:if="${type == 1}" name="" id="edit" th:text="${agreement.registrationAgreement}"></textarea>
+                        <textarea th:if="${type == 2}" name="" id="edit" th:text="${agreement.memberDescription}"></textarea>
+                        <textarea th:if="${type == 3}" name="" id="edit" th:text="${agreement.sharingRules}"></textarea>
+                        <textarea th:if="${type == 4}" name="" id="edit" th:text="${agreement.aboutUS}"></textarea>
+                        <textarea th:if="${type == 5}" name="" id="edit" th:text="${agreement.greenCard}"></textarea>
+                        <textarea th:if="${type == 6}" name="" id="edit" th:text="${agreement.privacy}"></textarea>
+                        <input th:if="${type == 1}" type="hidden" name="registrationAgreement" id="context">
+                        <input th:if="${type == 2}" type="hidden" name="memberDescription" id="context">
+                        <input th:if="${type == 3}" type="hidden" name="sharingRules" id="context">
+                        <input th:if="${type == 4}" type="hidden" name="aboutUS" id="context">
+                        <input th:if="${type == 5}" type="hidden" name="greenCard" id="context">
+                        <input th:if="${type == 6}" type="hidden" name="privacy" id="context">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script src="../../../layuiadmin/tinymce/tinymce.js"></script>
+<script>
+    var tt = "";
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'laydate', 'layedit'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , layedit = layui.layedit
+            , util = layui.util
+            , form = layui.form;
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            var content = tt.get('#edit').getContent()
+            $("#context").val(encodeURIComponent(content))
+            var json = $('#form').serialize();
+            json = decodeURIComponent(json, true);
+            $.ajaxSettings.headers = {"token":layui.data(layui.setter.tableName)['token']};
+            $.ajax({
+                url: '/agreement/update',
+                type: "post",
+                data: json,
+                async: false,
+                success: function (result) {
+                    layer.msg(result.message)
+                },
+                error: function (result) {
+                    layer.msg(result.message)
+                }
+            });
+            return false;
+        });
+    });
+
+    layui.extend({
+        tinymce: '../../../layuiadmin/tinymce/tinymce'
+    }).use(['tinymce', 'util', 'layer'], function () {
+        var t = layui.tinymce;
+        tt = layui.tinymce;
+        var util = layui.util;
+
+        t.init({
+            selector: '#edit',
+            //skin:'oxide-dark',
+            //language:'zh_CN',
+            plugins: 'print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media template code codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists wordcount imagetools textpattern help emoticons autosave bdmap indent2em autoresize lineheight formatpainter axupimgs',
+            toolbar: 'code undo redo restoredraft | cut copy paste pastetext | forecolor backcolor bold italic underline strikethrough link anchor | alignleft aligncenter alignright alignjustify outdent indent | table image media charmap emoticons hr pagebreak insertdatetime print preview |\
+                     styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript superscript removeformat | indent2em lineheight formatpainter |fullscreen|\ ',
+            height: 650, //编辑器高度
+            min_height: 532,
+            fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px 72px',
+            font_formats: '微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif;仿宋体=FangSong,serif;黑体=SimHei,sans-serif;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats;知乎配置=BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;小米配置=Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,Heiti SC,WenQuanYi Micro Hei,sans-serif',
+            extended_valid_elements:'script[src]',
+            template_cdate_format: '[CDATE: %m/%d/%Y : %H:%M:%S]',
+            template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
+            autosave_ask_before_unload: false,
+            toolbar_mode : 'wrap',
+            emoticons_database_url: '../../../layuiadmin/tinymce/tinymce/plugins/emoticons/js/emojis.js',
+            images_upload_handler: function (blobInfo, succFun, failFun) {
+                var xhr, formData;
+                var file = blobInfo.blob();//转化为易于理解的file对象
+                xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                                xhr.open('POST', '/jiaoyou/file/UploadFile1');
+                xhr.setRequestHeader("token",layui.data(layui.setter.tableName)['token']);
+                xhr.onload = function() {
+                    var json;
+                    if (xhr.status != 200) {
+                        failFun('HTTP Error: ' + xhr.status);
+                        return;
+                    }
+                    json = JSON.parse(xhr.responseText);
+                    var data= json.data;
+                    succFun(data);
+                };
+                formData = new FormData();
+                formData.append('file', file, file.name );//此处与源文档不一样
+                xhr.send(formData);
+            },
+            icons:'ax-color',
+        });
+    });
+</script>
+</body>
+</html>
+

@@ -1,0 +1,167 @@
+<!--银行卡信息新增部分-->
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>表单组合</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">添加</div>
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" lay-filter="component-form-group" id="form">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>开户行</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="bankName" id="bankName" lay-verify="required|name" autocomplete="off"
+                               placeholder="请输入开户行名称"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>请上传图标</label>
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="test1">上传图标</button>
+                        <div class="layui-upload-list">
+                            <img class="layui-upload-img" id="demo1" style="width: 300px;height: 300px">
+                            <input type="hidden" name="bankIcon" id="bankIcon">
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>颜色选择</label>
+     <div class="layui-input-inline" style="width: 120px;">
+         <input type="text" value="" placeholder="请选择颜色" class="layui-input" name="bankColor1" id="bankColor1">
+     </div>
+     <div class="layui-inline" style="left: -11px;">
+         <div id="test-form"></div>
+     </div>
+
+                     <div class="layui-input-inline" style="width: 120px;">
+                         <input type="text" value="" placeholder="请选择颜色" class="layui-input" name="bankColor2" id="bankColor2">
+                     </div>
+                     <div class="layui-inline" style="left: -11px;">
+                         <div id="test-form1"></div>
+                     </div>
+
+                     <div id="showColor"></div>
+
+
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>排序值</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="bankSort" min="0" max="100000" id="bankSort" lay-verify="required|weight" autocomplete="off"
+                               placeholder="请输入排序值"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'upload', 'laydate', 'layedit','colorpicker'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , layedit = layui.layedit
+            , upload = layui.upload
+            , form = layui.form
+            ,colorpicker = layui.colorpicker;
+
+        //表单赋值
+        colorpicker.render({
+            elem: '#test-form'
+            ,color: '#ff0000'
+            ,done: function(color){
+                $('#bankColor1').val(color);
+            }
+        });
+        //大红大紫的配合，完美
+        colorpicker.render({
+            elem: '#test-form1'
+            ,color: '#aa00ff'
+            ,done: function(color){
+                $('#bankColor2').val(color);
+            }
+        });
+
+        var uploadinst = upload.render({
+            elem: '#test1'
+            , url: '/jiaoyou/file/UploadFile' //改成您自己的上传接口
+            , headers: {"token": layui.data(layui.setter.tableName)['token']}
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.status != 200) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                layer.msg('上传成功');
+                $("#bankIcon").val(res.data)
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demotext = $('#demotext');
+                demotext.html('<span style="color: #ff5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demotext.find('.demo-reload').on('click', function () {
+                    uploadinst.upload();
+                });
+            }
+        });
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            var json = $('#form').serialize();
+            json = decodeURIComponent(json, true);
+            $.ajaxSettings.headers = {"token": layui.data(layui.setter.tableName)['token']};
+            $.ajax({
+                url: '/bankManage/add',
+                type: "post",
+                data: json,
+                async: false,
+                success: function (result) {
+                    window.parent.location.reload();
+                },
+                error: function (result) {
+                    window.parent.location.reload();
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

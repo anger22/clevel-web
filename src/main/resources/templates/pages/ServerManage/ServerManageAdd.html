@@ -1,0 +1,240 @@
+<!--服务管理新增界面-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>表单组合</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">添加</div>
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" lay-filter="component-form-group" id="form">
+
+                  <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>选择类型</label>
+                    <div class="layui-input-block">
+                        <select name="serverTypeId" lay-filter="serverTypeId" id="serverTypeId" lay-verify="required">
+                            <option value="">请选择一个选项</option>
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>请上传封面图</label>
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="test1">上传封面图</button>
+                        <div class="layui-upload-list">
+                            <img class="layui-upload-img" id="demo1" style="width: 300px;height: 300px">
+                            <input type="hidden" name="serverCover" id="serverCover">
+                        </div>
+                    </div>
+                </div>
+
+ <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="serverTitle" id="serverTitle" autocomplete="off"
+                               placeholder="请输入标题"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+  <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>价格</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="serverPrice" id="serverPrice" autocomplete="off"
+                               placeholder="请输入金额" min="0" max="900000000"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+
+  <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>图文介绍</label>
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="test2">上传图片简介</button>
+                        <div class="layui-upload-list">
+                            <img class="layui-upload-img" id="demo2" style="width: 300px;height: 300px">
+                            <input type="hidden" name="serverIntroduce" id="serverIntroduce">
+                        </div>
+                    </div>
+                </div>
+
+
+
+                 <!--省市区选择寄件人地址-->
+                        <div class="layui-form-item" id="addressDiv1">
+                            <label class="layui-form-label"><span style="color: red">*</span>市区信息</label>
+                    <div class="layui-input-block">
+                            <div class="layui-input-inline">
+                                <select name="P1" lay-filter="province" id="province" lay-verify="required">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select name="C1" lay-filter="citys" id="citys" lay-verify="required">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        </div>
+                <!--省市区选择-->
+
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <input type="hidden" id="width" name="width" />
+                            <input type="hidden" id="city" name="city" />
+                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../../../layuiadmin/layui/lay/modules/jquery-3.4.0.js"></script>
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script src="../../../layuiadmin/js/select.js" type="text/javascript" charset="utf-8"></script>
+<script>
+
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'upload', 'laydate', 'layedit'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , layedit = layui.layedit
+            , upload = layui.upload
+            , form = layui.form;
+
+        var uploadInst = upload.render({
+            elem: '#test1'
+            , url: '/jiaoyou/file/UploadFile' //改成您自己的上传接口
+            , headers: {"token": layui.data(layui.setter.tableName)['token']}
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.status != 200) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                layer.msg('上传成功');
+                $("#serverCover").val(res.data)
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+        var base64Value = "";
+       var uploadInst = upload.render({
+            elem: '#test2'
+            , url: '/jiaoyou/file/UploadFile' //改成您自己的上传接口
+            , headers: {"token": layui.data(layui.setter.tableName)['token']}
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    base64Value = result;
+                    $('#demo2').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.status != 200) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                layer.msg('上传成功');
+               // 改变图片的src
+               // 创建对象
+               var img = new Image();
+               img.src = base64Value;
+               // console.log("woshi", base64Value)
+               // 打印
+               $('#width').attr('value', (img.width/img.height).toFixed(2)); //图片链接（base64）
+               // console.log('width:'+img.width+',height:'+img.height,$('#width').attr('value'));
+
+                $("#serverIntroduce").val(res.data)
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+
+
+        form.on('select(citys)', function(data){
+             var str = $('#citys').val() +"市";
+               $('#city').val(str)
+          // console.log(str)
+      });
+
+ //异步加载下拉框数据
+        $.ajaxSettings.headers = {"token":layui.data(layui.setter.tableName)['token']};
+        $.get("/serverType/getAll", function (data) {
+            var $html = "";
+            // $html += "<option value=''>请选择或搜索一级菜单</option>";
+            if (data != null) {
+                $.each(data, function (index, item) {
+                    $html += "<option value='" + item.id + "'>" + item.serverTitle + "</option>";
+                });
+                $("#serverTypeId").append($html);
+                //append后必须从新渲染
+                form.render('select');
+            }
+        });
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            // var content = tt.get('#edit').getContent()
+            // $("#serverIntroduce").val(encodeURIComponent(content))
+            var json = $('#form').serialize();
+            json = decodeURIComponent(json, true);
+            $.ajaxSettings.headers = {"token": layui.data(layui.setter.tableName)['token']};
+            $.ajax({
+                url: '/serverManager/add',
+                type: "post",
+                data: json,
+                async: false,
+                success: function (result) {
+                    window.parent.location.reload();
+                },
+                error: function (result) {
+                    window.parent.location.reload();
+                }
+            });
+        });
+    });
+
+</script>
+
+</body>
+</html>

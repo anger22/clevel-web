@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqi.jiaoyou.mapper.ServerInfoManagerDao">
+
+    <resultMap type="com.qiqi.jiaoyou.pojo.ServerInfoManager" id="ServerInfoManagerMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="serverTypeId" column="server_type_id" jdbcType="INTEGER"/>
+        <result property="serverCover" column="server_cover" jdbcType="VARCHAR"/>
+        <result property="serverTitle" column="server_title" jdbcType="VARCHAR"/>
+        <result property="serverPrice" column="server_price" jdbcType="NUMERIC"/>
+        <result property="serverIntroduce" column="server_introduce" jdbcType="VARCHAR"/>
+        <result property="serverIsTop" column="server_is_top" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="serverStatus" column="server_status" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ServerInfoManagerMap">
+        select
+          id, server_type_id, server_cover, server_title, server_price, server_introduce, server_is_top, create_time, update_time, server_status
+        from jiaoyou.server_info_manager
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ServerInfoManagerMap">
+        select
+          id, server_type_id, server_cover, server_title, server_price, server_introduce, server_is_top, create_time, update_time, server_status
+        from jiaoyou.server_info_manager
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ServerInfoManagerMap">
+        select
+        id, server_type_id, server_cover, server_title, server_price, server_introduce, server_is_top, create_time,
+        update_time, server_status
+        from jiaoyou.server_info_manager
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="serverTypeId != null">
+                and server_type_id = #{serverTypeId}
+            </if>
+            <if test="serverCover != null and serverCover != ''">
+                and server_cover = #{serverCover}
+            </if>
+            <if test="serverTitle != null and serverTitle != ''">
+                and server_title = #{serverTitle}
+            </if>
+            <if test="serverPrice != null">
+                and server_price = #{serverPrice}
+            </if>
+            <if test="serverIntroduce != null and serverIntroduce != ''">
+                and server_introduce = #{serverIntroduce}
+            </if>
+            <if test="serverIsTop != null and serverIsTop != ''">
+                and server_is_top = #{serverIsTop}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+            <if test="serverStatus != null and serverStatus != ''">
+                and server_status = #{serverStatus}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into jiaoyou.server_info_manager(server_type_id, server_cover, server_title, server_price, server_introduce, server_is_top, create_time, update_time, server_status)
+        values (#{serverTypeId}, #{serverCover}, #{serverTitle}, #{serverPrice}, #{serverIntroduce}, #{serverIsTop}, #{createTime}, #{updateTime}, #{serverStatus})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update jiaoyou.server_info_manager
+        <set>
+            <if test="serverTypeId != null">
+                server_type_id = #{serverTypeId},
+            </if>
+            <if test="serverCover != null and serverCover != ''">
+                server_cover = #{serverCover},
+            </if>
+            <if test="serverTitle != null and serverTitle != ''">
+                server_title = #{serverTitle},
+            </if>
+            <if test="serverPrice != null">
+                server_price = #{serverPrice},
+            </if>
+            <if test="serverIntroduce != null and serverIntroduce != ''">
+                server_introduce = #{serverIntroduce},
+            </if>
+            <if test="serverIsTop != null and serverIsTop != ''">
+                server_is_top = #{serverIsTop},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="serverStatus != null and serverStatus != ''">
+                server_status = #{serverStatus},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from jiaoyou.server_info_manager where id = #{id}
+    </delete>
+
+</mapper>

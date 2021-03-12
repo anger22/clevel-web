@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqi.jiaoyou.mapper.LoveHeartDonationLogsDao">
+
+    <resultMap type="com.qiqi.jiaoyou.pojo.LoveHeartDonationLogs" id="LoveHeartDonationLogsMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="donationProjectId" column="donation_project_id" jdbcType="INTEGER"/>
+        <result property="donationTime" column="donation_time" jdbcType="TIMESTAMP"/>
+        <result property="donationMoney" column="donation_money" jdbcType="NUMERIC"/>
+        <result property="donationRemark" column="donation_remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="selectLogsAllInfo"
+            parameterType="com.qiqi.jiaoyou.pojo.LoveHeartDonationLogs"
+            resultType="com.qiqi.jiaoyou.vo.loveDonationLogsVo">
+SELECT
+a.id,
+a.donation_time,
+a.donation_money,
+b.head,
+b.nickName,
+b.id AS userId
+FROM
+love_heart_donation_logs a
+LEFT JOIN member b ON a.user_id = b.id
+WHERE
+a.id = #{userId}
+ORDER BY
+	a.donation_time DESC
+    </select>
+
+
+</mapper>

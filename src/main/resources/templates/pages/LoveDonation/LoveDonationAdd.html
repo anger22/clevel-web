@@ -1,0 +1,201 @@
+<!--爱心捐赠新增界面-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>表单组合</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">添加</div>
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" lay-filter="component-form-group" id="form">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="loveTitle" id="loveTitle" autocomplete="off"
+                               placeholder="请输入标题"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>项目说明</label>
+                    <div class="layui-input-block">
+                        <!--<textarea placeholder="请输入项目说明" name="loveExplain" id="loveExplain" class="layui-textarea"></textarea>-->
+                        <textarea name="" id="edit"></textarea>
+                        <input type="hidden" name="loveExplain" id="loveExplain">
+                        <!--<input type="textarea" name="gameSort" id="gameSort" autocomplete="off"-->
+                               <!--placeholder=""-->
+                               <!--class="layui-input" required="required">-->
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>需要捐赠金额</label>
+                    <div class="layui-input-block">
+                    <input type="number" name="loveNeedMoney" id="loveNeedMoney" autocomplete="off"
+                               placeholder="请输入金额" min="0" max="900000000"
+                               class="layui-input" required="required">
+                    </div>
+                </div>
+
+                 <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red">*</span>请上传封面图</label>
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="test1">上传封面图</button>
+                        <div class="layui-upload-list">
+                            <img class="layui-upload-img" id="demo1" style="width: 300px;height: 300px">
+                            <input type="hidden" name="loveCover" id="loveCover">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'upload', 'laydate', 'layedit'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , layedit = layui.layedit
+            , upload = layui.upload
+            , form = layui.form;
+
+        var uploadInst = upload.render({
+            elem: '#test1'
+            , url: '/jiaoyou/file/UploadFile' //改成您自己的上传接口
+            , headers: {"token": layui.data(layui.setter.tableName)['token']}
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.status != 200) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                layer.msg('上传成功');
+                $("#loveCover").val(res.data)
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            var content = tt.get('#edit').getContent()
+            $("#loveExplain").val(encodeURIComponent(content))
+            var json = $('#form').serialize();
+            json = decodeURIComponent(json, true);
+            $.ajaxSettings.headers = {"token": layui.data(layui.setter.tableName)['token']};
+            $.ajax({
+                url: '/loveDonation/add',
+                type: "post",
+                data: json,
+                async: false,
+                success: function (result) {
+                    window.parent.location.reload();
+                },
+                error: function (result) {
+                    window.parent.location.reload();
+                }
+            });
+        });
+    });
+    layui.extend({
+        tinymce: '../../../layuiadmin/tinymce/tinymce'
+    }).use(['tinymce', 'util', 'layer'], function () {
+        var t = layui.tinymce;
+        tt = layui.tinymce;
+        var util = layui.util;
+
+        t.init({
+            selector: '#edit',
+            //skin:'oxide-dark',
+            language:'zh_CN',
+            plugins: 'print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media template code codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists wordcount imagetools textpattern help emoticons autosave bdmap indent2em autoresize lineheight formatpainter axupimgs',
+            toolbar: 'code undo redo restoredraft | cut copy paste pastetext | forecolor backcolor bold italic underline strikethrough link anchor | alignleft aligncenter alignright alignjustify outdent indent | table image media charmap emoticons hr pagebreak insertdatetime print preview |\
+                     styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript superscript removeformat | indent2em lineheight formatpainter |fullscreen|\ ',
+            height: 650, //编辑器高度
+            min_height: 532,
+            fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px 72px',
+            font_formats: '微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif;仿宋体=FangSong,serif;黑体=SimHei,sans-serif;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats;知乎配置=BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;小米配置=Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,Heiti SC,WenQuanYi Micro Hei,sans-serif',
+
+            //importcss_append: true,
+
+            //content_security_policy: "script-src *;",
+            extended_valid_elements:'script[src]',
+            //
+            template_cdate_format: '[CDATE: %m/%d/%Y : %H:%M:%S]',
+            template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
+            autosave_ask_before_unload: false,
+            toolbar_mode : 'wrap',
+            images_upload_handler: function (blobInfo, succFun, failFun) {
+                var xhr, formData;
+                var file = blobInfo.blob();//转化为易于理解的file对象
+                xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open('POST', '/jiaoyou/file/UploadFile1');
+                xhr.setRequestHeader("token",layui.data(layui.setter.tableName)['token']);
+                xhr.onload = function() {
+                    var json;
+                    if (xhr.status != 200) {
+                        failFun('HTTP Error: ' + xhr.status);
+                        return;
+                    }
+                    json = JSON.parse(xhr.responseText);
+
+                    var data= window.location.host +  json.data;
+                    succFun(data);
+                };
+                formData = new FormData();
+                formData.append('file', file, file.name );//此处与源文档不一样
+                xhr.send(formData);
+            },
+            icons:'ax-color',
+        });
+    });
+</script>
+
+</body>
+</html>
